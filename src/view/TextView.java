@@ -53,12 +53,17 @@ public class TextView {
 		System.out.println("Perform another search? y/n");
 		if (scanner.hasNextLine()) {
 			String response = scanner.nextLine().strip();
-			if (response.charAt(0) == 'y' || response.charAt(0) == 'Y') {
-				return true;
-			} if (response.charAt(0) == 'n' || response.charAt(0) == 'N') {;
-				return false;
+			if (response.length() != 0) {
+				if (response.charAt(0) == 'y' || response.charAt(0) == 'Y') {
+					return true;
+				} if (response.charAt(0) == 'n' || response.charAt(0) == 'N') {;
+					return false;
+				} else {
+					System.out.println("Invalid response: Please type 'y' or 'n'.");
+					return continueLoop();
+				}
 			} else {
-				System.out.print("Invalid response: Please type 'y' or 'n'");
+				System.out.print("\nInvalid response: Must provide input. ");
 				return continueLoop();
 			}
 		} else {
