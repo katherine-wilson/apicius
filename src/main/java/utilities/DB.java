@@ -1,4 +1,5 @@
 package utilities;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,28 +80,30 @@ public class DB {
     	 
     	    Map<String,AttributeValue> expressionAttributeValues = new HashMap<>();
     	    expressionAttributeValues.put(":recipeValue",new AttributeValue().withS(sSearchStr));
-    	 
-    	    QueryRequest queryRequest = new QueryRequest()
-    	            .withTableName(sTableName)
-    	            .withKeyConditionExpression("#recipe = :recipeValue")
-    	            .withExpressionAttributeNames(expressionAttributesNames)
-    	            .withExpressionAttributeValues(expressionAttributeValues);
-    	    QueryResult response = dynamoDB.query(queryRequest);
-    	    List<Map<String,AttributeValue>> items = response.getItems();
-    	    System.out.println(items.size());
-    	    // Set to 10 for testing
+    	    
+    	    ScanRequest scanRequest = new ScanRequest()
+    	    	    .withTableName(sTableName)
+    	    	    .withFilterExpression("contains(recipe, :recipeValue)")
+    	    	    .withExpressionAttributeValues(expressionAttributeValues);
+    	    
+    	    ScanResult result = dynamoDB.scan(scanRequest);
+    	    List<Map<String,AttributeValue>> items = result.getItems();
     	    Recipe[] recipesFound = new Recipe[items.size()];
     	    for (int i = 0; i < items.size(); i++) 
     	    {
     	    	//System.out.println(items.get(0));
     	    	Map<String, AttributeValue> curPair = items.get(i);
-    	    	String val = curPair.get("recipe").getS();
-    	    	Recipe curRecipe = new Recipe(val);
+    	    	String recipeName = curPair.get("recipe").getS();
+    	    	
+    	    	List<AttributeValue> ingredients = curPair.get("ingredients").getL();
+    	    	Recipe curRecipe = new Recipe(recipeName.substring(2));
+    	    	for (int j = 0; j < ingredients.size(); j++) 
+    	    	{
+    	    		curRecipe.addIngredient(ingredients.get(j).getS());
+    	    	}
     	    	recipesFound[i] = curRecipe;
-    	    	//System.out.println(val);
     	    }
     	    return recipesFound;
-
 
         } catch (AmazonServiceException ase) {
             System.out.println("Caught an AmazonServiceException, which means your request made it "
@@ -118,6 +121,72 @@ public class DB {
             System.out.println("Error Message: " + ace.getMessage());
         }
 		return null;
-    	
     }
+    
+    // Finds recipes that match the user pantry of ingredients
+    public List<Recipe> PantryQuery(List<String> pantry) throws Exception
+    {
+    	try 
+    	{
+    		List<String> testPantry = new ArrayList<String>();
+    		testPantry.add("eggs");
+    		testPantry.add("flour");
+    		testPantry.add("milk");
+    		testPantry.add("chicken");
+    		Map<String,AttributeValue> expressionAttributeValues = new HashMap<>();
+     	    expressionAttributeValues.put(":recipeIndicator",new AttributeValue().withS("r#"));
+    		
+     	   ScanRequest scanRequest = new ScanRequest()
+   	    	    .withTableName(sTableName)
+   	    	    .withFilterExpression("contains(recipe, :recipeIndicator)")
+   	    	    .withExpressionAttributeValues(expressionAttributeValues);
+     	    
+     	   ScanResult result = dynamoDB.scan(scanRequest);
+     	   List<Map<String,AttributeValue>> items = result.getItems();
+     	   List<Recipe> availableRecipes = new ArrayList<Recipe>();
+     	   for (int i = 0; i < items.size(); i++) 
+     	   {
+   	    	//System.out.println(items.get(0));
+   	    	Map<String, AttributeValue> curPair = items.get(i);
+   	    	String recipeName = curPair.get("recipe").getS();
+   	    	List<AttributeValue> ingredients = curPair.get("ingredients").getL();
+   	    	Recipe curRecipe = new Recipe(recipeName.substring(2));
+   	    	
+   	    	for (int j = 0; j < ingredients.size(); j++) 
+   	    	{
+   	    		
+   	    		curRecipe.addIngredient(ingredients.get(j).getS());
+   	    	}
+   	    	if (testPantry.containsAll(curRecipe.getIngredients())) 
+   	    	{
+   	    		availableRecipes.add(curRecipe);
+   	    	}
+   	    }
+     	  for (int i = 0; i < availableRecipes.size(); i++) 
+     	  {
+				System.out.print("---------------\n" + availableRecipes.get(i) +
+						" - ingredients: " + availableRecipes.get(i).getIngredientString() + "\n---------------\n");
+     	  }
+     	  return availableRecipes;
+
+        } catch (AmazonServiceException ase) {
+            System.out.println("Caught an AmazonServiceException, which means your request made it "
+                    + "to AWS, but was rejected with an error response for some reason.");
+            System.out.println("Error Message:    " + ase.getMessage());
+            System.out.println("HTTP Status Code: " + ase.getStatusCode());
+            System.out.println("AWS Error Code:   " + ase.getErrorCode());
+            System.out.println("Error Type:       " + ase.getErrorType());
+            System.out.println("Request ID:       " + ase.getRequestId());
+        } catch (AmazonClientException ace) 
+    	{
+            System.out.println("Caught an AmazonClientException, which means the client encountered "
+                    + "a serious internal problem while trying to communicate with AWS, "
+                    + "such as not being able to access the network.");
+            System.out.println("Error Message: " + ace.getMessage());
+        }
+		return null;
+    }
+    
+    
+
 }
