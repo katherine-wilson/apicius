@@ -44,7 +44,8 @@ public class TextView {
 			System.out.printf("No recipes found containing keyword: \"%s\"\n", response);
 		} else {
 			for (int i = 0; i < recipes.length; i++) {
-				System.out.print("---------------\n" + recipes[i] + "\n---------------\n");
+				System.out.print("---------------\n" + recipes[i] +
+						" - ingredients: " + recipes[i].getIngredientString() + "\n---------------\n");
 			}
 		}
 	}
