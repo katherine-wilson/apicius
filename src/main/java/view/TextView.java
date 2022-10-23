@@ -1,11 +1,11 @@
-package main.java.view;
+package view;
 
 import java.util.Scanner;
 
 
-import main.java.controller.Controller;
-import main.java.model.Model;
-import main.java.utilities.Recipe;
+import controller.Controller;
+import model.Model;
+import utilities.Recipe;
 
 // console-based test view 
 

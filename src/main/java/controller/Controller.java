@@ -1,7 +1,7 @@
-package main.java.controller;
+package controller;
 
-import main.java.model.Model;
-import main.java.utilities.Recipe;
+import utilities.Recipe;
+import model.Model;
 
 public class Controller {
 	

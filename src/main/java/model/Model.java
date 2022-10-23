@@ -1,7 +1,7 @@
-package main.java.model;
+package model;
 
-import main.java.utilities.DB;
-import main.java.utilities.Recipe;
+import utilities.DB;
+import utilities.Recipe;
 
 public class Model {
 	
