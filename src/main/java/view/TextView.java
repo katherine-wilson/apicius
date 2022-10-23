@@ -1,12 +1,11 @@
-package view;
+package main.java.view;
 
 import java.util.Scanner;
 
 
-import controller.Controller;
-import model.Model;
-import utilities.Recipe;
-import utilities.DB;
+import main.java.controller.Controller;
+import main.java.model.Model;
+import main.java.utilities.Recipe;
 
 // console-based test view 
 
@@ -20,6 +19,7 @@ public class TextView {
 			cont = continueLoop();
 		}
 	}
+	
 	
 	public static void search(Controller controller) throws Exception {
 		Scanner scanner = new Scanner(System.in);

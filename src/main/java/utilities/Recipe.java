@@ -1,4 +1,4 @@
-package utilities;
+package main.java.utilities;
 
 // object that stores recipe data
 
