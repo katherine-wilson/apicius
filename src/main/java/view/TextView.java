@@ -40,7 +40,7 @@ public class TextView {
 	
 	
 	public static void showRecipes(String response, Recipe[] recipes) {
-		if (recipes == null) {
+		if (recipes == null || recipes.length == 0) {
 			System.out.printf("No recipes found containing keyword: \"%s\"\n", response);
 		} else {
 			for (int i = 0; i < recipes.length; i++) {
