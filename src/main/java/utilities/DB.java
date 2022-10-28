@@ -1,5 +1,6 @@
 package utilities;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,8 @@ import java.util.Map;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -43,21 +46,14 @@ public class DB {
     
     public DB() 
     {
-    	ProfileCredentialsProvider credentialsProvider = new ProfileCredentialsProvider();
-        try {
-            credentialsProvider.getCredentials();
-        } catch (Exception e) {
-            throw new AmazonClientException(
-                    "Cannot load the credentials from the credential profiles file. " +
-                    "Please make sure that your credentials file is at the correct " +
-                    "location (/Users/kyle/.aws/credentials), and is in valid format.",
-                    e);
-        }
-        dynamoDB = AmazonDynamoDBClientBuilder.standard()
-            .withCredentials(credentialsProvider)
-            .withRegion("us-west-2")
+    	BasicAWSCredentials awsCreds = new BasicAWSCredentials("AKIA27QC4C7OKQMFHHCH", 
+    			"kc0NPpvx+qu9iTS9rZF1darGGMeaU6oaKy86BbcM");
+
+    	dynamoDB = AmazonDynamoDBClientBuilder.standard()
+            .withRegion(Regions.US_WEST_2)
+            .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
             .build();
-       
+    	
         sTableName = "436Project";
     }
 
@@ -91,18 +87,22 @@ public class DB {
     	    Recipe[] recipesFound = new Recipe[items.size()];
     	    for (int i = 0; i < items.size(); i++) 
     	    {
-    	    	//System.out.println(items.get(0));
     	    	Map<String, AttributeValue> curPair = items.get(i);
     	    	String recipeName = curPair.get("recipe").getS();
-    	    	
-    	    	List<AttributeValue> ingredients = curPair.get("ingredients").getL();
-    	    	Recipe curRecipe = new Recipe(recipeName.substring(2));
+    	    	String ingredientsStr = curPair.get("ingredients").getS();
+    	    	ingredientsStr = ingredientsStr.replace("'", "");
+    	    	ingredientsStr = ingredientsStr.replace("[", "");
+    	    	ingredientsStr = ingredientsStr.replace("]", "");
+    	    	String [] split = ingredientsStr.split("\\s*,\\s*");
+    	    	List<String> ingredients = Arrays.asList(split);
+    	    	Recipe curRecipe = new Recipe(recipeName);
     	    	for (int j = 0; j < ingredients.size(); j++) 
     	    	{
-    	    		curRecipe.addIngredient(ingredients.get(j).getS());
+    	    		curRecipe.addIngredient(ingredients.get(j));
     	    	}
     	    	recipesFound[i] = curRecipe;
     	    }
+    	    PantryQuery(null);
     	    return recipesFound;
 
         } catch (AmazonServiceException ase) {
@@ -133,29 +133,29 @@ public class DB {
     		testPantry.add("flour");
     		testPantry.add("milk");
     		testPantry.add("chicken");
-    		Map<String,AttributeValue> expressionAttributeValues = new HashMap<>();
-     	    expressionAttributeValues.put(":recipeIndicator",new AttributeValue().withS("r#"));
     		
      	   ScanRequest scanRequest = new ScanRequest()
-   	    	    .withTableName(sTableName)
-   	    	    .withFilterExpression("contains(recipe, :recipeIndicator)")
-   	    	    .withExpressionAttributeValues(expressionAttributeValues);
+   	    	    .withTableName(sTableName);
      	    
      	   ScanResult result = dynamoDB.scan(scanRequest);
      	   List<Map<String,AttributeValue>> items = result.getItems();
      	   List<Recipe> availableRecipes = new ArrayList<Recipe>();
      	   for (int i = 0; i < items.size(); i++) 
      	   {
-   	    	//System.out.println(items.get(0));
    	    	Map<String, AttributeValue> curPair = items.get(i);
    	    	String recipeName = curPair.get("recipe").getS();
-   	    	List<AttributeValue> ingredients = curPair.get("ingredients").getL();
+   	    	String ingredientsStr = curPair.get("ingredients").getS();
+	    	ingredientsStr = ingredientsStr.replace("'", "");
+	    	ingredientsStr = ingredientsStr.replace("[", "");
+	    	ingredientsStr = ingredientsStr.replace("]", "");
+	    	String [] split = ingredientsStr.split("\\s*,\\s*");
+	    	List<String> ingredients = Arrays.asList(split);
    	    	Recipe curRecipe = new Recipe(recipeName.substring(2));
    	    	
    	    	for (int j = 0; j < ingredients.size(); j++) 
    	    	{
    	    		
-   	    		curRecipe.addIngredient(ingredients.get(j).getS());
+   	    		curRecipe.addIngredient(ingredients.get(j));
    	    	}
    	    	if (testPantry.containsAll(curRecipe.getIngredients())) 
    	    	{
