@@ -228,7 +228,7 @@ public class GUI extends Application {
 		scene.setRoot(currentMenu);
 		stage.show();
 		for (Recipe recipe : controller.getFavorites()) {
-			System.out.println(recipe.getName());
+			//System.out.println(recipe.getName());
 		}
 	}
 	
