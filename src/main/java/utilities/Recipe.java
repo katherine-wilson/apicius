@@ -17,7 +17,7 @@ public class Recipe implements Serializable {
 	
 	// TODO: add constructor with more args?
 	public Recipe(String name) {
-		this.name = name;
+		this.name = titleCase(name);
 		this.length = -1;
 		this.steps = -1;
 		this.ingredients = new ArrayList<String>();
@@ -104,13 +104,20 @@ public class Recipe implements Serializable {
 	}
 	
 	private String titleCase(String str) {
-		String[] words = str.split(" ");
-		String newString = "";
-		for (String word : words) {
-			newString += word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase() + " ";
+		if (str.length() > 1) {
+			String[] words = str.split(" ");
+			String newString = "";
+			for (String word : words) {
+				word = word.strip();
+				if (word.length() > 1) {
+					newString += word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase() + " ";
+				} else  if (word.length() == 1) {
+					newString += word.toUpperCase() + " ";
+				}
+			}
+			return newString.substring(0, newString.length() - 1);
 		}
-		
-		return newString.substring(0, newString.length() - 1);
+		return str;
 	}
 	
 }
