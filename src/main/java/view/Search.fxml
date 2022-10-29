@@ -23,7 +23,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.RangeSlider?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="595.0" prefWidth="956.0" style="-fx-background-color: #F0EAE4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="595.0" prefWidth="956.0" style="-fx-background-color: #F0EAE4;" xmlns="http://javafx.com/javafx/17-0-1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI">
    <children>
       <StackPane prefHeight="595.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
