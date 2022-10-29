@@ -35,10 +35,7 @@ public class Controller {
 	}
 	
 	public Recipe[] searchRecipes(String keyword) throws Exception {
-		//return model.searchDatabase(keyword.toLowerCase());
-		Recipe[] recipes = new Recipe[1];
-		recipes[0] = new Recipe("cake");
-		return recipes;
+		return model.searchDatabase(keyword.toLowerCase());
 	}
 	
 	public void moveFavoriteUp(int index, Recipe recipe) {
