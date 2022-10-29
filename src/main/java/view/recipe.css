@@ -1,0 +1,32 @@
+.recipe-x
+{
+	-fx-background-color: transparent;
+	-fx-background-radius: 10;
+}
+
+.recipe-x: hover
+{
+	-fx-background-color: #D53939;
+}
+
+.scroll-bar:horizontal, .scroll-bar:vertical
+{	
+	-fx-background-color: #F5F2F2; 
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb 
+{
+	-fx-background-color: #78666C;
+}
+
+.increment-button, .decrement-button
+{
+	-fx-background-color: transparent;
+}
+
+.recipe-star
+{
+	-fx-background-color: transparent;
+	-fx-background-radius: 10;
+}

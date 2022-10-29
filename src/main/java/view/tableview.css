@@ -1,0 +1,103 @@
+.table-view
+{
+	-fx-background-color: transparent;
+}
+
+.table-view .column-header-background .filler
+{
+	-fx-background-color: transparent;
+}
+
+.table-view .corner
+{	
+	-fx-background-color: transparent;
+}
+
+.table-view .column-header
+{
+	-fx-background-color: transparent;
+}
+ 
+.table-view .column-header-background
+{
+	-fx-background-color: linear-gradient(to right, #C34B4B, #A73545);
+	-fx-padding: 10;
+	-fx-background-radius: 7px 7px 0 0;
+}
+
+.table-view .column-header .label
+{
+	-fx-text-fill: #F5F2F2;
+	-fx-font-family: "Nirmala UI Semilight";
+	-fx-alignment: CENTER;
+	-fx-font-size: 21px;
+}
+
+.table-view .virtual-flow .scroll-bar:vertical,
+.table-view .virtual-flow .scroll-bar:vertical .track,
+.table-view .virtual-flow .scroll-bar:vertical .track-background,
+.table-view .virtual-flow .scroll-bar:horizontal,
+.table-view .virtual-flow .scroll-bar:horizontal .track,
+.table-view .virtual-flow .scroll-bar:horizontal .track-background
+{
+	-fx-padding: 5;
+	-fx-background-color: transparent;
+}
+
+.table-view .virtual-flow .scroll-bar .increment-button,
+.table-view .virtual-flow .scroll-bar .decrement-button
+{
+	-fx-opacity: 0;
+}
+
+.table-view .virtual-flow .scroll-bar:vertical .thumb,
+.table-view .virtual-flow .scroll-bar:horizontal .thumb
+{	
+	-fx-background-color: linear-gradient(to bottom, #E76262, #E25C5C);
+}
+
+.table-view .table-cell
+{
+	-fx-alignment: CENTER;
+	-fx-font-family: "Dubai Light";
+	-fx-font-size: 15px;
+	-fx-padding: 50 5 25 5;
+	-fx-border-width: 20 0 0 0;
+	-fx-border-color: #F5F2F2;
+	-fx-background-color: white;
+}
+
+.table-row-cell
+{
+	-fx-cell-size: 80px;
+	-fx-background-color: transparent;
+}
+
+.table-row-cell:empty
+{
+	-fx-background-color: #F5F2F2;
+}
+ 
+.table-row-cell:empty .table-cell
+{
+	-fx-background-color: #F5F2F2; 
+	-fx-border-width: 0px;
+}
+
+.table-row-cell: hover
+{
+	-fx-text-background-color: linear-gradient(to right, #C34B4B, #932E40);
+	-fx-font-family: "Nirmala UI";
+	-fx-font-weight: bold;
+}
+
+.table-row-cell: pressed,
+.table-row-cell: selected
+{
+	-fx-text-background-color: #C34B4B;
+}
+
+.table-view .arrow
+{
+	-fx-mark-color: white;
+}

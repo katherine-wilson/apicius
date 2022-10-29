@@ -1,0 +1,111 @@
+.slider
+{
+	-fx-pref-width: 300px;
+}
+
+.slider .track
+{
+	-fx-background-color: linear-gradient(to right, #AA093A, #F05B5B);
+	-fx-background-radius: 20;
+	-fx-pref-height: 20;
+}
+
+.slider .thumb 
+{
+	-fx-background-color: white;
+}
+
+.slider .axis .axis-tick-mark,
+.slider .axis .axis-minor-tick-mark 
+{
+	-fx-stroke: white;
+}
+
+
+.range-slider 
+{
+	-fx-pref-width: 300px;
+}
+
+.range-slider .track
+{
+	-fx-background-color: #DFDADC;
+	-fx-background-radius: 5;
+	-fx-pref-height: 10;
+}
+
+.range-slider .low-thumb,
+.range-slider .high-thumb
+{
+	-fx-background-color: white;
+	-fx-pref-height: 20;
+	-fx-pref-width: 10;
+}
+
+.range-slider .range-bar 
+{
+	-fx-background-color: linear-gradient(to right, #AA093A, #F05B5B);
+}
+
+.range-slider .axis 
+{
+	-fx-tick-label-font-family: "Nirmala UI";
+	-fx-tick-label-font-size: 10pt;
+}
+
+.range-slider .axis .axis-tick-mark,
+.range-slider .axis .axis-minor-tick-mark
+{
+	-fx-stroke: black;
+	-fx-stroke-width: .75;
+}
+
+.check-box .box 
+{
+	-fx-background-color: white; 
+}
+.check-box:hover
+{
+	-fx-text-fill: #AA093A;
+}
+
+.check-box:selected .mark
+{
+	-fx-background-color: white;
+}
+
+.check-box:selected .box 
+{
+	-fx-background-color: #C70039;
+}
+
+.filter-button 
+{
+	-fx-background-color: white;
+	-fx-background-radius: 20;
+}
+
+.filter-button:hover 
+{
+	-fx-background-color: linear-gradient(to left, #AA093A, #F05B5B);
+	-fx-text-fill: white;
+}
+
+.clear-button 
+{
+	-fx-background-color: transparent;
+	-fx-border-color: black;
+	-fx-border-width: .5;
+	-fx-text-fill: black;
+	-fx-border-radius: 20;
+	-fx-background-radius: 20;
+}
+
+.clear-button:hover 
+{
+	-fx-background-color: transparent;
+	-fx-border-color: linear-gradient(to left, #AA093A, #F05B5B);
+	-fx-text-fill: linear-gradient(to left, #AA093A, #F05B5B);
+	-fx-border-radius: 20;
+	-fx-background-radius: 20;
+}

@@ -1,0 +1,105 @@
+.list-cell:filled:selected
+{
+	-fx-background-color: linear-gradient(to right, #EF656A, #C52C52);
+	-fx-text-fill: white;
+}
+
+.list-cell
+{
+	-fx-border-color: transparent;
+	-fx-font-family: "Dubai light";
+	-fx-font-size: 20px;
+	-fx-padding: 20;
+	-fx-border-width: 4 4 4 4;
+	-fx-border-color: #F5F2F2;
+	-fx-border-radius: 7px 7px 7px 7px;
+	-fx-background-color: #FFFFFF;
+	-fx-background-radius: 20px 20px 20px 20px;
+}
+
+.list-cell:filled:hover
+{ 
+	-fx-background-color: linear-gradient(to right, #EF656A, #C52C52);
+	-fx-text-fill: white;
+}
+
+.list-view
+{
+	-fx-background-color: transparent;
+	-fx-border-color: transparent;
+}
+
+.list-view .virtual-flow .scroll-bar:vertical,
+.list-view .virtual-flow .scroll-bar:vertical .track,
+.list-view .virtual-flow .scroll-bar:vertical .track-background,
+.list-view .virtual-flow .scroll-bar:horizontal,
+.list-view .virtual-flow .scroll-bar:horizontal .track,
+.list-view .virtual-flow .scroll-bar:horizontal .track-background
+{
+	-fx-padding: 5;
+	-fx-background-color: transparent;
+}
+
+.list-view .virtual-flow .scroll-bar .increment-button,
+.list-view .virtual-flow .scroll-bar .decrement-button
+{
+	-fx-opacity: 0;
+}
+
+.list-cell:empty {
+	-fx-background-color: transparent;
+}
+
+.list-view .virtual-flow .scroll-bar:vertical .thumb,
+.list-view .virtual-flow .scroll-bar:horizontal .thumb
+{	
+	-fx-background-color: linear-gradient(to top, #EF656A, #C65868);
+}
+
+.delete-button
+{
+	-fx-border-color: linear-gradient(to bottom, #EF656A, #C52C52);
+	-fx-border-radius: 15;
+	-fx-background-color: transparent;
+	-fx-text-fill: linear-gradient(to bottom, #EF656A, #C52C52);
+}
+
+.delete-button:hover
+{
+	-fx-background-color: radial-gradient(radius 180%, #F46138, derive(#F43867, -15%), derive(#F49938, 30%));
+	-fx-background-radius:  15;
+	-fx-border-color: transparent;
+	-fx-text-fill: white;
+}
+
+.open-button
+{
+	-fx-border-color: linear-gradient(to top, #3877F4, #38D4F4);
+	-fx-border-radius: 15;
+	-fx-background-color: transparent;
+	-fx-text-fill: linear-gradient(to top, #3877F4, #38D4F4);
+}
+
+.open-button:hover
+{
+	-fx-background-color: radial-gradient(radius 180%, #3877F4, derive(#599CFF, -15%), derive(#6DD5FF, 30%));
+	-fx-background-radius:  15;
+	-fx-border-color: transparent;
+	-fx-text-fill: white;
+}
+
+.arrow-button
+{
+	-fx-border-color: linear-gradient(to top, #46DB0B, #56F36A);
+	-fx-border-radius: 15;
+	-fx-background-color: transparent;
+	-fx-text-fill: linear-gradient(to top, #46DB0B, #56F36A);
+}
+
+.arrow-button:hover
+{
+	-fx-background-color: radial-gradient(radius 180%, #47F985, derive(#56F36A, -15%), derive(#56F36A, 30%));
+	-fx-background-radius:  15;
+	-fx-border-color: transparent;
+	-fx-text-fill: white;
+}

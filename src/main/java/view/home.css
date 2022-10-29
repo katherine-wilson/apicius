@@ -1,0 +1,7 @@
+.home-background
+{
+	-fx-background-image: url("Home-background.jpg");
+	-fx-background-repeat: stretch;
+	-fx-background-size: 1920 1258.15;
+	-fx-background-position: center center;
+}

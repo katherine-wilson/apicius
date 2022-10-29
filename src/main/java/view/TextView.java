@@ -10,7 +10,7 @@ import utilities.Recipe;
 // console-based test view 
 
 public class TextView {
-	public static void main(String[] args) throws Exception {
+	public static void start() throws Exception {
 		Model model = new Model();
 		Controller controller = new Controller(model);
 		boolean cont = true;
@@ -22,6 +22,7 @@ public class TextView {
 	
 	
 	public static void search(Controller controller) throws Exception {
+		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Enter a keyword:");
 		if (scanner.hasNextLine()) {
@@ -44,7 +45,7 @@ public class TextView {
 			System.out.printf("No recipes found containing keyword: \"%s\"\n", response);
 		} else {
 			for (int i = 0; i < recipes.length; i++) {
-				System.out.print("---------------\n" + recipes[i] +
+				System.out.print("---------------\n" + recipes[i].getName() +
 						" - ingredients: " + recipes[i].getIngredientString() + "\n---------------\n");
 			}
 		}
@@ -52,6 +53,7 @@ public class TextView {
 	
 	
 	public static boolean continueLoop() {
+		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Perform another search? y/n");
 		if (scanner.hasNextLine()) {
