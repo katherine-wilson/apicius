@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
-
 import controller.Controller;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -17,10 +15,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -227,9 +223,9 @@ public class GUI extends Application {
 		}
 		scene.setRoot(currentMenu);
 		stage.show();
-		for (Recipe recipe : controller.getFavorites()) {
+		//for (Recipe recipe : controller.getFavorites()) {
 			//System.out.println(recipe.getName());
-		}
+		//}
 	}
 	
 	// switches to pantry menu
