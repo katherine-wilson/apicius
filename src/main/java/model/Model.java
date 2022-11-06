@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import utilities.DB;
 import utilities.Recipe;
@@ -17,7 +18,9 @@ public class Model implements Serializable {
 	private static final long serialVersionUID = -7981606873473705713L;
 	private static DB db;
 	private ArrayList<Recipe> favorites = new ArrayList<Recipe>();
-	
+
+	private ArrayList<String> pantry_list = new ArrayList<String>();
+
 	private static final String DATA_FILE_NAME = "user_data.dat";
 	
 	public Model() {
@@ -35,6 +38,22 @@ public class Model implements Serializable {
 		return db.Search(keyword);
 		
 	}
+
+	public void removePantryItem(String item) {
+		pantry_list.remove(item);
+	}
+
+	public void addPantryItem(String item) {
+		pantry_list.add(item);
+	}
+
+	public List<String> getPantry() {
+		return pantry_list;
+	}
+
+	public List<Recipe> searchWithPantry() throws Exception {
+		return db.PantryQuery(getPantry());
+	}
 	
 	public void saveUserData() {
 		try {
@@ -51,6 +70,7 @@ public class Model implements Serializable {
 		Model model = (Model) input.readObject();	// reads in model object from file
 		if (model != null) {
 			this.favorites = (ArrayList<Recipe>) model.favorites.clone();
+			this.pantry_list = (ArrayList<String>) model.pantry_list.clone();
 		}
 		input.close();
 	}
