@@ -3,6 +3,7 @@ package controller;
 import utilities.Recipe;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import model.Model;
 
@@ -25,7 +26,23 @@ public class Controller {
 		model.addToFavorites(recipe);
 		return true;
 	}
-	
+
+	public void removePantryItem(String item) {
+		model.removePantryItem(item);
+	}
+
+	public void addPantryItem(String item) {
+		model.addPantryItem(item);
+	}
+
+	public List<String> getPantry() {
+		return model.getPantry();
+	}
+
+	public List<Recipe> searchWithPantry() throws Exception {
+		return model.searchWithPantry();
+	}
+
 	public void removeFromFavorites(Recipe recipe) {
 		model.removeFromFavorites(recipe);
 	}
