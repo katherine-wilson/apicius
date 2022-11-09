@@ -9,7 +9,7 @@ import model.Model;
 import utilities.Recipe;
 
 public class ModelTest {
-	
+	//tests all general methods
 	@Test
 	void testModelGeneral() {
 		Model m = new Model();
@@ -55,7 +55,7 @@ public class ModelTest {
 		assert(m.getPantry().size() == 2);
 		
 	}
-	
+	//tests the move up and down methods
 	@Test
 	void testModelMove() {
 		Model m = new Model();

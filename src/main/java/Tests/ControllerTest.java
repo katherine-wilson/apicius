@@ -10,6 +10,7 @@ import model.Model;
 import utilities.Recipe;
 
 public class ControllerTest {
+	//tests all controller general methods
 	@Test
 	void controllerGeneral() {
 		Model m  = new Model();
@@ -55,7 +56,8 @@ public class ControllerTest {
 		c.removePantryItem("yogurt");
 		assert(c.getPantry().size() == 2);
 	}
-	
+	//this creates multiple recipes to test the controler's
+	//use of the move up and down methods for favorites
 	@Test
 	void testControllerMove() {
 		Model m = new Model();

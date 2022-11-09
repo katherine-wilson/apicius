@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import utilities.Recipe;
 public class RecipeTests {
+	//tests one recipe for all general methods
 	@Test
 	void testRecipe1() {
 		Recipe recipe1 = new Recipe("meatloaf");
@@ -31,7 +32,7 @@ public class RecipeTests {
 		System.out.println("all setters and getters functiong correctly.");
 		
 	}
-	
+	//tests equals method
 	@Test
 	void testEquals() {
 		Recipe recipe1 = new Recipe("meatloaf");
