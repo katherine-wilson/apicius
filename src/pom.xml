@@ -3,6 +3,10 @@
   <groupId>csc.team</groupId>
   <artifactId>proj</artifactId>
   <version>1.0.0</version>
+    <properties>
+        <maven.compiler.source>19</maven.compiler.source>
+        <maven.compiler.target>19</maven.compiler.target>
+    </properties>
   <dependencies>
     <dependency>
       <groupId>com.amazonaws</groupId>
