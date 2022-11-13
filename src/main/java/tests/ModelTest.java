@@ -1,20 +1,18 @@
-package Tests;
+package tests;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import controller.Controller;
 import model.Model;
 import utilities.Recipe;
 
-public class ControllerTest {
-	//tests all controller general methods
+public class ModelTest {
+	//tests all general methods
 	@Test
-	void controllerGeneral() {
-		Model m  = new Model();
-		Controller c = new Controller(m);
+	void testModelGeneral() {
+		Model m = new Model();
 		
 		Recipe recipe1 = new Recipe("meatloaf");//first letter gets made uppercase
 		
@@ -30,38 +28,37 @@ public class ControllerTest {
 		recipe1.addDirection("season meatloaf");
 		recipe1.addDirection("eat meatloaf");
 		
-		//adds recipe to the model's list through controller
-		c.addToFavorites(recipe1);
+		//adds recipe to the model's list
+		m.addToFavorites(recipe1);
 		
 		//checks the getFavorites method
-		ArrayList<Recipe> fav = c.getFavorites();
+		ArrayList<Recipe> fav = m.getFavorites();
 		assert(fav.get(0).getName().equals("Meatloaf"));
 		
 		//adds 4 pantry items
-		c.addPantryItem("cheese");
-		c.addPantryItem("cream cheese");
-		c.addPantryItem("yogurt");
-		c.addPantryItem("ground beef");
+		m.addPantryItem("cheese");
+		m.addPantryItem("cream cheese");
+		m.addPantryItem("yogurt");
+		m.addPantryItem("ground beef");
 		
 		//tests getPantry method
-		List<String> pantry = c.getPantry();
+		List<String> pantry = m.getPantry();
 		assert(pantry.size() == 4);
 		
 		//tests removeFromFavorites method
-		c.removeFromFavorites(recipe1);
-		assert(c.getFavorites().size() == 0);
+		m.removeFromFavorites(recipe1);
+		assert(m.getFavorites().size() == 0);
 		
 		// tests removePantryItem method
-		c.removePantryItem("cheese");
-		c.removePantryItem("yogurt");
-		assert(c.getPantry().size() == 2);
+		m.removePantryItem("cheese");
+		m.removePantryItem("yogurt");
+		assert(m.getPantry().size() == 2);
+		
 	}
-	//this creates multiple recipes to test the controler's
-	//use of the move up and down methods for favorites
+	//tests the move up and down methods
 	@Test
-	void testControllerMove() {
+	void testModelMove() {
 		Model m = new Model();
-		Controller c = new Controller(m);
 		
 		//creates 3 temporary recipes
 		Recipe recipe1 = new Recipe("meatloaf");
@@ -88,14 +85,15 @@ public class ControllerTest {
 		recipe2.addDirection("make burrito");
 		
 		//adds 3 recipes to model's favorites
-		c.addToFavorites(recipe1);
-		c.addToFavorites(recipe2);
-		c.addToFavorites(recipe3);
+		m.addToFavorites(recipe1);
+		m.addToFavorites(recipe2);
+		m.addToFavorites(recipe3);
 		
-		c.moveFavoriteDown(0, recipe1);
-		c.moveFavoriteUp(2, recipe3);
-		assert(c.getFavorites().get(0).getName().equals("Taco"));
+		m.moveFavoriteDown(0, recipe1);
+		m.moveFavoriteUp(2, recipe3);
+		assert(m.getFavorites().get(0).getName().equals("Meatloaf"));
 		
-		System.out.println("All Tests Passed for Controller.");
+		System.out.println("All Tests Passed for Model.");
 	}
+
 }
