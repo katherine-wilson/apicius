@@ -195,7 +195,7 @@ public class GUI extends Application {
 		
 		// saves user data on exit
 		stage.setOnCloseRequest(e -> { controller.saveUserData(); });
-		
+
 	}
 	
 	// switches to search menu
