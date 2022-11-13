@@ -21,7 +21,6 @@
 	-fx-stroke: white;
 }
 
-
 .range-slider 
 {
 	-fx-pref-width: 300px;
@@ -64,6 +63,7 @@
 {
 	-fx-background-color: white; 
 }
+
 .check-box:hover
 {
 	-fx-text-fill: #AA093A;

@@ -186,6 +186,7 @@ public class GUI extends Application {
 		
 		// TODO: remove block; debugging
 		System.out.println("Loaded Favorites:");
+		System.out.println("# of favorites: " + model.getFavorites().size());
 		for (Recipe recipe : model.getFavorites()) {
 			if (recipe != null) {
 				System.out.println(recipe.getName());
@@ -245,7 +246,7 @@ public class GUI extends Application {
 	
 	// called when enter is pressed or magnifying glass button is clicked
 	public void searchForRecipes() throws Exception {
-		Recipe[] results = controller.searchRecipes(searchBar.getText());
+		Recipe[] results = controller.searchRecipes(searchBar.getText().strip());
 		obsResults.clear(); 				// clears table of previous search results
 		searchResults.setVisible(false);	// hides table
 		recipesFound.setText("");			// removes "X recipes found" message
@@ -451,10 +452,12 @@ public class GUI extends Application {
 		// retrieve recipe that was clicked
 		selectRecipe();
 		if (currentRecipe != null) {
-			if (controller.getFavorites().contains(currentRecipe)) {
-				recipeFavoriteButton.setStyle("-fx-background-color: linear-gradient(to left, #F27440, #CB1349); -fx-text-fill: white;");
-			} else {
-				recipeFavoriteButton.setStyle("-fx-text-fill: #402020;");
+			if (recipeFavoriteButton != null) {	// only executes if recipe menu has a favorites button
+				if (controller.getFavorites().contains(currentRecipe)) {
+					recipeFavoriteButton.setStyle("-fx-background-color: linear-gradient(to left, #F27440, #CB1349); -fx-text-fill: white;");
+				} else {
+					recipeFavoriteButton.setStyle("-fx-text-fill: #402020;");
+				}
 			}
 			
 			// Set text fields for recipe menu
@@ -512,7 +515,9 @@ public class GUI extends Application {
 			recipeFavoriteButton.setStyle("-fx-background-color: linear-gradient(to left, #F27440, #CB1349); -fx-text-fill: white;");
 			controller.addToFavorites(currentRecipe);
 		} else {													// removes from favorites
-			recipeFavoriteButton.setStyle("-fx-text-fill: #402020;");
+			if (recipeFavoriteButton != null) {
+				recipeFavoriteButton.setStyle("-fx-text-fill: #402020;");
+			}
 			controller.removeFromFavorites(currentRecipe);
 			obsFavorites.remove(currentRecipe.getName());
 			if (inFavorites) {
@@ -600,8 +605,10 @@ public class GUI extends Application {
 			recipesFound.setText("Showing all recipes");
 		} else if (inFavorites) {	// initializes the ListView for the favorites menu
 			for (Recipe recipe : controller.getFavorites()) { // adds each favorite to listview's observable items
-				obsFavorites.add(recipe.getName());
-				nameToRecipe.put(recipe.getName(), recipe);
+				if (recipe != null) {
+					obsFavorites.add(recipe.getName());
+					nameToRecipe.put(recipe.getName(), recipe);
+				}
 			}
 			
 			favoritesList.setItems(obsFavorites);
