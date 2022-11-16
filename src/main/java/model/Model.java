@@ -105,8 +105,12 @@ public class Model implements Serializable {
 			input = new ObjectInputStream(new FileInputStream(DATA_FILE_NAME));
 			Model model = (Model) input.readObject();	// reads in model object from file
 			if (model != null) {
-				this.favorites = (ArrayList<Recipe>) model.favorites.clone();
-				this.pantryList = (ArrayList<String>) model.pantryList.clone();
+				if (model.favorites != null) {
+					this.favorites = (ArrayList<Recipe>) model.favorites.clone();
+				}
+				if (model.pantryList != null) {
+					this.pantryList = (ArrayList<String>) model.pantryList.clone();
+				}
 			}
 			input.close();
 		} catch (IOException | ClassNotFoundException e) { }
