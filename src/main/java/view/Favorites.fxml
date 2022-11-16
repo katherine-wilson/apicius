@@ -73,12 +73,12 @@
          <children>
             <VBox prefHeight="595.0" prefWidth="710.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Label prefHeight="80.0" prefWidth="527.0" text="Your Favorite Recipes" textFill="#884b53">
+                  <Label fx:id="menuTitle" prefHeight="80.0" prefWidth="527.0" rotate="-7.0" text="Your Favorite Recipes" textFill="#884b53">
                      <font>
-                        <Font name="Dubai Medium" size="45.0" />
+                        <Font name="Script MT Bold" size="45.0" />
                      </font>
                      <VBox.margin>
-                        <Insets left="15.0" top="10.0" />
+                        <Insets bottom="32.0" left="15.0" top="10.0" />
                      </VBox.margin>
                   </Label>
                   <HBox fx:id="favoritesButtons" alignment="CENTER_RIGHT" spacing="15.0" stylesheets="@listview.css" visible="false">

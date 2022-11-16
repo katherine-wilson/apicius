@@ -101,3 +101,13 @@
 {
 	-fx-mark-color: white;
 }
+
+.tool-button
+{
+	-fx-text-fill: #F0EAE4;
+}
+
+.tool-button:hover
+{
+	-fx-text-fill: #FFFFFF;
+}

@@ -105,14 +105,11 @@ public class DB {
     // Finds recipes that match the user pantry of ingredients
     public List<Recipe> PantryQuery(List<String> pantry) throws Exception
     {
+    	if (pantry == null) {
+    		return new ArrayList<Recipe>();
+    	}
     	try 
     	{
-    		List<String> testPantry = new ArrayList<String>();
-    		testPantry.add("eggs");
-    		testPantry.add("flour");
-    		testPantry.add("milk");
-    		testPantry.add("chicken");
-    		
      	   ScanRequest scanRequest = new ScanRequest()
    	    	    .withTableName(sTableName);
      	    
@@ -129,14 +126,13 @@ public class DB {
 	    	ingredientsStr = ingredientsStr.replace("]", "");
 	    	String [] split = ingredientsStr.split("\\s*,\\s*");
 	    	List<String> ingredients = Arrays.asList(split);
-   	    	Recipe curRecipe = new Recipe(recipeName.substring(2));
+   	    	Recipe curRecipe = new Recipe(recipeName);
    	    	
    	    	for (int j = 0; j < ingredients.size(); j++) 
    	    	{
-   	    		
    	    		curRecipe.addIngredient(ingredients.get(j));
    	    	}
-   	    	if (testPantry.containsAll(curRecipe.getIngredients())) 
+   	    	if (pantry.containsAll(curRecipe.getIngredients())) 
    	    	{
    	    		availableRecipes.add(curRecipe);
    	    	}

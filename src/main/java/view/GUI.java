@@ -1,17 +1,21 @@
 package view;
 
-import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import controller.Controller;
+import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -29,14 +33,18 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import model.Model;
 import utilities.Recipe;
 import org.controlsfx.control.RangeSlider;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.TextFields;
 
 public class GUI extends Application {
 
@@ -50,8 +58,8 @@ public class GUI extends Application {
 	
 	// Search Menu Fields
 	static ArrayList<Recipe> allRecipes;
-	static boolean inSearch;	// indicates if GUI is displaying search menu
 	ObservableList<Recipe> obsResults = FXCollections.observableArrayList();
+	private boolean filtersActive;
 	@FXML
 	private TableView<Recipe> searchResults;
 	@FXML
@@ -64,6 +72,10 @@ public class GUI extends Application {
 	private TableColumn<Recipe, Integer> numIngredientsCol;
 	@FXML
 	private TableColumn<Recipe, String> ingredientsCol;
+	@FXML
+	private HBox searchToolbar;
+	@FXML
+	private BorderPane searchInfo;
 	@FXML
 	private TextField searchBar;
 	@FXML
@@ -117,9 +129,9 @@ public class GUI extends Application {
 	private Recipe currentRecipe;
 	
 	// Favorites Menu Fields
-	static boolean inFavorites;	// indicates if GUI is displaying favorites menu
 	ObservableList<String> obsFavorites = FXCollections.observableArrayList();
 	private HashMap<String, Recipe> nameToRecipe = new HashMap<String, Recipe>(); 
+	private List<String> allIngredients;
 	@FXML
 	private ListView<String> favoritesList;
 	@FXML
@@ -133,8 +145,31 @@ public class GUI extends Application {
 	@FXML
 	private Button downArrow;	
 	
+	// Pantry Menu Fields
+	ObservableList<String> obsIngredients = FXCollections.observableArrayList();
+	private String currentIngredient;
+	@FXML
+	private AnchorPane pantrySearchMenu;
+	@FXML
+	private AnchorPane pantryIngredientsMenu;
+	@FXML
+	private ListView<String> ingredientsList;
+	@FXML
+	private TextField ingredientSearchBar;
+	@FXML
+	private AutoCompletionBinding<String> autoIngredient;
+	@FXML
+	private Button deleteIngredientButton;
+	@FXML
+	private Button pantrySearchButton;
+	@FXML
+	private Button backButton;
+	@FXML
+	private Label menuTitle;
+	
+	
 	// Window Nodes
-	static Parent currentMenu;
+	static Parent menu;
 	static Stage stage;
 	static Scene scene;
 	
@@ -142,33 +177,38 @@ public class GUI extends Application {
 	static Controller controller;
 	static Model model;
 	
-	static final String DATA_FILE_NAME = "user_data.dat";	// name of user data file
+	static final String RECIPE_SUBSET_FILE = "recipe_subset.dat"; // name of recipe subset file
+	
+	static char currentMenu; // 'h' = home, 's' = search, 'f' = favorites, 'p' = pantry
 	
 	
 	@Override
 	public void start(Stage stage) throws Exception {
 		// load home page FXML file by default
-		currentMenu = FXMLLoader.load(getClass().getResource("Home.fxml"));
-		inSearch = false;
-		inFavorites = false;
+		menu = FXMLLoader.load(getClass().getResource("Home.fxml"));
+		currentMenu = 'h';
 		
 		// initialize static fields - shared by every GUI instance created by FXML
-		File userData = new File(DATA_FILE_NAME); 
-		if (userData.exists()) {	// initializes model with user data (if it exists)
-			try {
-				model = new Model(DATA_FILE_NAME);
-			} catch (ClassNotFoundException | IOException e) {
-				model = new Model();
-			}
-		} else {
-			model = new Model();
-		}
+		model = new Model();
 		GUI.controller = new Controller(model);
 		GUI.stage = stage;
-		GUI.scene = new Scene(currentMenu, 1250, 750);
-		GUI.allRecipes = new ArrayList<Recipe>();
-		for (Recipe recipe : controller.searchRecipes("")) {
-			allRecipes.add(recipe);
+		GUI.scene = new Scene(menu, 1250, 750);
+		if (allRecipes == null) {
+			GUI.allRecipes = new ArrayList<Recipe>();
+			
+			ObjectInputStream input;
+			try {
+				input = new ObjectInputStream(new FileInputStream(RECIPE_SUBSET_FILE));
+				ArrayList<Recipe> subset = (ArrayList<Recipe>) input.readObject();	// reads subset from file
+				if (subset != null) {
+					GUI.allRecipes = (ArrayList<Recipe>) subset.clone();
+				}
+				input.close();
+			} catch (IOException | ClassNotFoundException e) { }
+			
+			for (Recipe recipe : controller.searchRecipes("")) {
+				allRecipes.add(recipe);
+			}
 		}
 		
 		// prepares stage + launches GUI
@@ -184,62 +224,46 @@ public class GUI extends Application {
 		stage.setMinHeight(595);
 		stage.show();
 		
-		// TODO: remove block; debugging
-		System.out.println("Loaded Favorites:");
-		System.out.println("# of favorites: " + model.getFavorites().size());
-		for (Recipe recipe : model.getFavorites()) {
-			if (recipe != null) {
-				System.out.println(recipe.getName());
-			}
-		}
-		
 		// saves user data on exit
 		stage.setOnCloseRequest(e -> { controller.saveUserData(); });
-
 	}
 	
 	// switches to search menu
 	public void searchButtonHandler() {
-		inSearch = true;
-		inFavorites = false;
+		currentMenu = 's';
 		try {
-			currentMenu = FXMLLoader.load(getClass().getResource("Search.fxml"));
+			menu = FXMLLoader.load(getClass().getResource("Search.fxml"));
 		} catch (IOException e) {
 			System.err.println("ERROR: 'Search.fxml' not found.");
 			e.printStackTrace();
 		}
-		scene.setRoot(currentMenu);
+		scene.setRoot(menu);
 		stage.show();
 	}
 	
 	// switches to favorites menu
 	public void favoritesButtonHandler() {
-		inSearch = false;
-		inFavorites = true;
+		currentMenu = 'f';
 		try {
-			currentMenu = FXMLLoader.load(getClass().getResource("Favorites.fxml"));
+			menu = FXMLLoader.load(getClass().getResource("Favorites.fxml"));
 		} catch (IOException e) {
 			System.err.println("ERROR: 'Favorites.fxml' not found.");
 			e.printStackTrace();
 		}
-		scene.setRoot(currentMenu);
+		scene.setRoot(menu);
 		stage.show();
-		//for (Recipe recipe : controller.getFavorites()) {
-			//System.out.println(recipe.getName());
-		//}
 	}
 	
 	// switches to pantry menu
 	public void pantryButtonHandler() {
-		inSearch = false;
-		inFavorites = false;
+		currentMenu = 'p';
 		try {
-			currentMenu = FXMLLoader.load(getClass().getResource("Pantry.fxml"));
+			menu = FXMLLoader.load(getClass().getResource("Pantry.fxml"));
 		} catch (IOException e) {
 			System.err.println("ERROR: 'Pantry.fxml' not found.");
 			e.printStackTrace();
 		}
-		scene.setRoot(currentMenu);
+		scene.setRoot(menu);
 		stage.show();
 	}
 	
@@ -259,7 +283,11 @@ public class GUI extends Application {
 			}
 			recipesFound.setText(obsResults.size() + " recipes found");
 			filterResults();
-			searchResults.setVisible(true);		// shows table
+			if (obsResults.size() != 0) {
+				searchResults.setVisible(true);		// shows table
+			} else {
+				searchResults.setVisible(false);
+			}
 		} else {					// shows "No Recipes Found" message if unsuccessful search
 			noRecipesFound.setVisible(true);
 		}
@@ -270,6 +298,18 @@ public class GUI extends Application {
 	}
 	
 	public void clearFilter() throws Exception {
+		filtersActive = false;
+		if (currentMenu == 's') {
+			resetFilter();
+			searchForRecipes(); // searches again to remove filters from results
+		} else if (currentMenu == 'p') {
+			resetFilter();
+			makePantrySearch(false);	// resets recommendations
+			filterMenu.setVisible(false);
+		}
+	}
+	
+	public void resetFilter() {
 		// removes selection from text boxes
 		lengthCheckBox.setSelected(false);
 		stepsCheckBox.setSelected(false);
@@ -285,9 +325,6 @@ public class GUI extends Application {
 		ingredientsSlider.setLowValue(0);
 		ingredientsSlider.setHighValue(0);
 		ingredientsSlider.setDisable(true);
-		
-		// searches again to remove filters from results
-		searchForRecipes();
 	}
 	
 	
@@ -295,12 +332,13 @@ public class GUI extends Application {
 	public void searchBarHandler(KeyEvent key) throws Exception {
 		if (key.getCode().equals(KeyCode.ENTER)) {
 			searchForRecipes();
+			searchBar.getParent().requestFocus();
 		}
 	}
 	
 	// toggles filter menu
 	public void filterButtonHandler() {
-		if (searchResults.isVisible()) {	// can only filter if there are search results present
+		if (searchResults.isVisible() || filtersActive) {	// can only filter if there are search results/filters present
 			if (filterMenu.isVisible()) {	// toggles filter menu
 				filterMenu.setVisible(false);
 			} else {
@@ -384,7 +422,6 @@ public class GUI extends Application {
 	// applies user's search filters to the current results
 	public void filterResults() throws Exception {
 		filterMenu.setVisible(false);
-		searchResults.setVisible(false);
 		
 		int[][] ranges = new int[3][2];	// inclusive min/max for each value
 		int filters = getRanges(ranges);
@@ -405,6 +442,7 @@ public class GUI extends Application {
 		
 		// updates labels above table
 		if (filters > 0) {
+			filtersActive = true;
 			if (filters == 1) {
 				filtersApplied.setText(filters + " filter active");
 			} else {
@@ -415,17 +453,24 @@ public class GUI extends Application {
 			} else {
 				recipesFound.setText(obsResults.size() + " recipes found");
 			}
-
+		} else {
+			filtersActive = false;
 		}
-		searchResults.setVisible(true);	// shows table	
+		
+		if (obsResults.size() == 0) {
+			noRecipesFound.setVisible(true);
+			searchResults.setVisible(false);
+		} else {
+			noRecipesFound.setVisible(false);
+		}
 	}
 	
 	public void selectRecipe() {
 		Recipe recipe;
-		if (inSearch) {	// takes from tableview
+		if (currentMenu == 's' || currentMenu == 'p') {	// takes from tableview
 			recipe = searchResults.getSelectionModel().getSelectedItem();
 			searchResults.getSelectionModel().clearSelection();	// prevents opening of menu when empty cell clicked
-		} else if (inFavorites) {	// takes from listview
+		} else if (currentMenu == 'f') {	// takes from listview
 			recipe = nameToRecipe.get(favoritesList.getSelectionModel().getSelectedItem());
 			if (recipe == null) {	// returns if selected cell is empty
 				return;
@@ -440,17 +485,21 @@ public class GUI extends Application {
 	
 	
 	public void favoriteCellClicked(MouseEvent event) {
+		Recipe oldCurrent = currentRecipe;
 		selectRecipe();
 		if (event.getButton().equals(MouseButton.PRIMARY) &&
 				event.getClickCount() == 2) {
 			openRecipeMenu();
+		} else if (oldCurrent != null && oldCurrent == currentRecipe) { // deselects recipe if previously clicked
+			favoritesList.getSelectionModel().clearSelection();
+			favoritesButtons.setVisible(false);
+			currentRecipe = null;
 		}
 	}
 	
 	
 	public void openRecipeMenu() {
-		// retrieve recipe that was clicked
-		selectRecipe();
+		selectRecipe(); // retrieves recipe that was clicked
 		if (currentRecipe != null) {
 			if (recipeFavoriteButton != null) {	// only executes if recipe menu has a favorites button
 				if (controller.getFavorites().contains(currentRecipe)) {
@@ -520,7 +569,7 @@ public class GUI extends Application {
 			}
 			controller.removeFromFavorites(currentRecipe);
 			obsFavorites.remove(currentRecipe.getName());
-			if (inFavorites) {
+			if (currentMenu == 'f') {
 				if (controller.getFavorites().size() != 0) {		// if some favorites left
 					Recipe recipe = nameToRecipe.get(favoritesList.getSelectionModel().getSelectedItem());
 					if (recipe == null) {
@@ -557,11 +606,230 @@ public class GUI extends Application {
 		}
 	}
 	
+	// when enter is pressed while typing in ingredient search bar, make search
+	public void ingSearchBarHandler(KeyEvent key) throws Exception {
+		if (key.getCode().equals(KeyCode.ENTER)) {
+			String ingredient = titleCase(ingredientSearchBar.getText().strip());
+			if (controller.addPantryItem(ingredient)) {
+				obsIngredients.add(ingredient);
+				Collections.sort(obsIngredients, String.CASE_INSENSITIVE_ORDER);
+			} else {
+				quickShake(ingredientSearchBar);
+				if (obsIngredients.contains(ingredient)) {
+					ingredientSearchBar.setPromptText("Already in your pantry!");
+				} else {
+					ingredientSearchBar.setPromptText("Invalid ingredient");
+				}
+				ingredientSearchBar.getParent().requestFocus();
+			}
+			ingredientSearchBar.clear();
+		}
+	}
+	
+	// handles event in which user clicks on an ingredient in their pantry
+	public void ingredientCellClicked(MouseEvent event) {
+		String ingredient = ingredientsList.getSelectionModel().getSelectedItem();
+		if (ingredient != null) {
+			if (currentIngredient != ingredient) {	// if ingredient clicked wasn't already selected
+				currentIngredient = ingredient;
+				deleteIngredientButton.setVisible(true);
+			} else {	// removes selection if ingredient clicked when selected
+				ingredientsList.getSelectionModel().clearSelection();
+				deleteIngredientButton.setVisible(false);
+				currentIngredient = "";
+			}
+		}
+	}
+	
+	public void deleteIngredient() {
+		controller.removePantryItem(currentIngredient);
+		obsIngredients.remove(currentIngredient);
+		if (obsIngredients.size() <= 0) {
+			deleteIngredientButton.setVisible(false);
+		} else {
+			String next = ingredientsList.getSelectionModel().getSelectedItem();
+			if (next == null) {
+				return;
+			}
+			currentIngredient = next;  // move current ingredient marker to next one 
+		}
+	}
+	
+	public void pantrySearchButtonHandler() throws Exception {
+		makePantrySearch(true);
+	}
+	
+	private void makePantrySearch(boolean slideIn) throws Exception {
+		obsResults.clear();
+		pantrySearchMenu.setVisible(true);
+		if (slideIn) {
+			slideLeft(pantrySearchMenu);
+		}
+		List<Recipe> recommendations = controller.searchWithPantry();
+		for (Recipe recipe : recommendations) {
+			obsResults.add(recipe);
+		}
+		if (obsResults.size() == 0) {
+			searchResults.setVisible(false);
+			noRecipesFound.setText("No Recipes Found...\nTime to go grocery shopping?");
+			noRecipesFound.setVisible(true);
+			filterButton.setVisible(false);
+		} else {
+			searchResults.setVisible(true);
+			noRecipesFound.setVisible(false);
+			filterButton.setVisible(true);
+			if (recommendations.size() == 1) {
+				recipesFound.setText("1 recipe found");	// removes "X recipes found" message
+			} else {
+				recipesFound.setText(recommendations.size() + " recipes found");
+			}
+		}
+		filtersApplied.setText("");	// removes "X filters active" message
+	}
+	
+	public void returnToPantry() {
+		pantryIngredientsMenu.setVisible(true);
+		slideRight(pantrySearchMenu);
+		resetFilter();
+		filterMenu.setVisible(false);
+	}
+	
+	private String titleCase(String str) {
+		boolean hasQuotes = false;
+		if (str.length() > 1) {
+			if (str.charAt(0) == '"') {
+				hasQuotes = true;
+			}
+			String[] words = str.split(" ");
+			String newString = "";
+			for (String word : words) {
+				word = word.strip();
+				if (word.length() > 1) {
+					newString += word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase() + " ";
+				} else if (word.length() == 1) {
+					newString += word.toUpperCase() + " ";
+				}
+			}
+			if (hasQuotes) {	// capitalizes first letter after quotation mark
+				newString = '"' + newString.substring(1, 2).toUpperCase() + newString.substring(2);
+			}
+			return newString.substring(0, newString.length() - 1);
+		}
+		return str;
+	}
+	
+	private void quickShake(Node toShake) {
+		TranslateTransition shake = new TranslateTransition();
+		shake.setDuration(new Duration(100));
+		shake.setNode(toShake);
+		shake.setByX(10);
+		shake.setToX(10);
+		shake.setCycleCount(4);
+		shake.setAutoReverse(true);
+		shake.play(); shake.stop(); shake.play(); // allows animation to be played more than once
+	}
+	
+	private void slideDown(Node toSlide, boolean bounce) {
+		toSlide.setVisible(true);
+		toSlide.setTranslateY(-100);
+		TranslateTransition slide = new TranslateTransition();
+		slide.setDuration(Duration.millis(500));
+		slide.setNode(toSlide);
+		slide.setToY(0);
+		slide.setByY(0);
+		slide.play();
+		if (bounce) {
+			slide.setOnFinished(e -> bounce(toSlide, true));
+		}
+	}
+	
+	private void slideUp(Node toSlide) {
+		toSlide.setTranslateY(1000);
+		TranslateTransition slide = new TranslateTransition();
+		slide.setDuration(Duration.millis(800));
+		slide.setNode(toSlide);
+		slide.setToY(0);
+		slide.setByY(0);
+		if (currentMenu == 's') {
+			searchToolbar.setVisible(false); // hides toolbar/info bar at first
+			searchInfo.setVisible(false);
+			slide.setOnFinished(e ->	// slides other elements into view
+			{ bounce(toSlide, false); slideDown(searchToolbar, false); 
+			  slideLeft(searchInfo); });
+		} else if (currentMenu == 'f') {
+			menuTitle.setVisible(false);
+			slide.setOnFinished(e -> slideDown(menuTitle, true));
+		}
+		slide.play();
+	}
+	
+	private void bounce(Node toBounce, boolean up) {
+		int direction = 1;
+		if (!up) {
+			direction = -1;
+		}
+		TranslateTransition bounce = new TranslateTransition();
+		bounce.setDuration(new Duration(175));
+		bounce.setNode(toBounce);
+		bounce.setByY(-9 * direction);
+		bounce.setToY(-9 * direction);
+		bounce.setCycleCount(2);
+		bounce.setAutoReverse(true);
+		bounce.play(); bounce.stop(); bounce.play();
+	}
+	
+	private void slideLeft(Node toSlide) {
+		toSlide.setVisible(true);
+		toSlide.setTranslateX(1920);
+		TranslateTransition slide = new TranslateTransition();
+		slide.setDuration(Duration.millis(700));
+		slide.setNode(toSlide);
+		slide.setToX(0);
+		slide.setByX(0);
+		slide.play();
+		slide.setOnFinished(e -> bounceSlideIn(toSlide));
+	}
+	
+	private void bounceSlideIn(Node toBounce) {
+		TranslateTransition bounce = new TranslateTransition();
+		bounce.setDuration(new Duration(150));
+		bounce.setNode(toBounce);
+		bounce.setByX(30);
+		bounce.setToX(30);
+		bounce.setCycleCount(2);
+		bounce.setAutoReverse(true);
+		bounce.play(); bounce.stop(); bounce.play();
+		bounce.setOnFinished(e -> secondBounce(toBounce));
+	}
+	
+	private void secondBounce(Node toBounce) {		
+		TranslateTransition bounce = new TranslateTransition();
+		bounce.setDuration(new Duration(150));
+		bounce.setNode(toBounce);
+		bounce.setByX(5);
+		bounce.setToX(5);
+		bounce.setCycleCount(2);
+		bounce.setAutoReverse(true);
+		bounce.play(); bounce.stop(); bounce.play();
+		if (currentMenu == 'p') {
+			bounce.setOnFinished(e -> pantryIngredientsMenu.setVisible(false));
+		}
+	}
+	
+	private void slideRight(Node toSlide) {
+		TranslateTransition slide = new TranslateTransition();
+		slide.setDuration(Duration.millis(900));
+		slide.setNode(toSlide);
+		slide.setToX(2000);
+		slide.setByX(2000);
+		slide.play();
+		slide.setOnFinished(e -> toSlide.setVisible(false));
+	}
 	
 	@FXML
 	// called when an FXML is loaded, initializes necessary nodes
 	private void initialize() throws Exception {
-		if (inSearch) {	// initializes the TableView for the search menu
+		if (currentMenu == 's' || currentMenu == 'p') { // initializes the TableView for the pantry/search menu
 			// sets up cell factories for each row
 			recipeNameCol.setCellValueFactory(new PropertyValueFactory<Recipe, String>("name"));
 			recipeNameCol.setSortType(TableColumn.SortType.DESCENDING);	// sorts table by name by default
@@ -575,7 +843,7 @@ public class GUI extends Application {
 			ingredientsCol.setCellValueFactory(new PropertyValueFactory<Recipe, String>("ingredientString"));
 			ingredientsCol.setStyle("-fx-font-size: 15; -fx-alignment: 'CENTER_RIGHT'; -fx-text-alignment: right; -fx-padding: 0 50 0 0;");
 			
-			// sets width and other column properties
+			// sets up table dimensions
 			recipeNameCol.prefWidthProperty().bind(searchResults.widthProperty().multiply(0.33));		
 			recipeNameCol.setResizable(false);		recipeNameCol.setReorderable(false);
 			lengthCol.prefWidthProperty().bind(searchResults.widthProperty().multiply(0.1));		
@@ -589,29 +857,49 @@ public class GUI extends Application {
 			
 			// sets up tableview
 			searchResults.setItems(obsResults);
-			searchResults.setPrefHeight(100);
-			searchResults.getSortOrder().add(recipeNameCol);	// makes sort arrow visible when table loads
-			for (Recipe recipe : allRecipes) {
+			searchResults.getSortOrder().add(recipeNameCol); // makes sort arrow visible when table loads
+			
+			// adds tooltip to filter button
+			Tooltip filter = new Tooltip("Filter");	filter.setStyle("-fx-font-size: 12;");
+			filterButton.setTooltip(filter);
+		}
+		
+		if (currentMenu == 's') {	// initializes nodes used in search menu
+			for (Recipe recipe : allRecipes) {	// initializes recipes in table
 				obsResults.add(recipe);
 			}
 			
+			searchResults.setPrefHeight(100);   // adjusts table height 
+			
 			// adds tooltip to filter/search buttons
 			Tooltip search = new Tooltip("Search");	search.setStyle("-fx-font-size: 12;");
-			Tooltip filter = new Tooltip("Filter");	filter.setStyle("-fx-font-size: 12;");
 			searchBarButton.setTooltip(search);
-			filterButton.setTooltip(filter);
 			
 			// all recipes are shown to the user by default in the menu
-			recipesFound.setText("Showing all recipes");
-		} else if (inFavorites) {	// initializes the ListView for the favorites menu
+			recipesFound.setText("Showing 50 recipes");
+			
+			slideUp(searchResults);
+		} else if (currentMenu == 'f') {	// initializes the ListView for the favorites menu
 			for (Recipe recipe : controller.getFavorites()) { // adds each favorite to listview's observable items
 				if (recipe != null) {
 					obsFavorites.add(recipe.getName());
 					nameToRecipe.put(recipe.getName(), recipe);
 				}
 			}
-			
 			favoritesList.setItems(obsFavorites);
+			slideUp(favoritesList);
+		} else if (currentMenu == 'p') {	// initializes ListView for pantry
+			// loads pantry into menu
+			for (String ingredient : controller.getPantry()) {
+				obsIngredients.add(ingredient);
+			}
+			ingredientsList.setItems(obsIngredients);
+			
+			// sets up auto-complete for adding ingredients
+			allIngredients = controller.getAllIngredients();
+			TextFields.bindAutoCompletion(ingredientSearchBar, allIngredients.toArray());
+			
+			slideDown(menuTitle, true);
 		}
 	}
 }

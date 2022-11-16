@@ -49,7 +49,7 @@ public class Recipe implements Serializable {
 	}
 	
 	public void setName(String name) {
-		this.name = name;
+		this.name = titleCase(name);
 	}
 	
 	public void setLength(int length) {
@@ -87,33 +87,38 @@ public class Recipe implements Serializable {
 	public boolean equals(Object obj) {
 		if (obj == this) {
 			return true;
-		}
-		
-		if (!(obj instanceof Recipe)) {
+		} else if (!(obj instanceof Recipe)) {
+			return false;
+		} else {
+			Recipe recipe = (Recipe) obj;
+			if (recipe.getName().equals(this.getName()) &&
+					recipe.getNumIngredients() == this.getNumIngredients() &&
+					recipe.getSteps() == this.getSteps() &&
+					recipe.getLength() == this.getLength()) {
+				return true;
+			}
 			return false;
 		}
-		
-		Recipe recipe = (Recipe) obj;
-		if (recipe.getName().equals(this.getName()) &&
-				recipe.getNumIngredients() == this.getNumIngredients() &&
-				recipe.getSteps() == this.getSteps() &&
-				recipe.getLength() == this.getLength()) {
-			return true;
-		}
-		return false;
 	}
 	
 	private String titleCase(String str) {
+		boolean hasQuotes = false;
 		if (str.length() > 1) {
+			if (str.charAt(0) == '"') {
+				hasQuotes = true;
+			}
 			String[] words = str.split(" ");
 			String newString = "";
 			for (String word : words) {
 				word = word.strip();
 				if (word.length() > 1) {
 					newString += word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase() + " ";
-				} else  if (word.length() == 1) {
+				} else if (word.length() == 1) {
 					newString += word.toUpperCase() + " ";
 				}
+			}
+			if (hasQuotes) {	// capitalizes first letter after quotation mark
+				newString = '"' + newString.substring(1, 2).toUpperCase() + newString.substring(2);
 			}
 			return newString.substring(0, newString.length() - 1);
 		}

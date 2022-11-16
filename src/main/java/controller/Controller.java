@@ -26,13 +26,16 @@ public class Controller {
 		model.addToFavorites(recipe);
 		return true;
 	}
-
+	
 	public void removePantryItem(String item) {
 		model.removePantryItem(item);
 	}
 
-	public void addPantryItem(String item) {
-		model.addPantryItem(item);
+	public boolean addPantryItem(String item) {
+		if (model.getAllIngredients().contains(item)) { // ensures new item is valid
+			return model.addPantryItem(item);
+		}
+		return false;
 	}
 
 	public List<String> getPantry() {
@@ -63,4 +66,7 @@ public class Controller {
 		model.moveFavoriteDown(index, recipe);
 	}
 	
+	public List<String> getAllIngredients() {
+		return model.getAllIngredients();
+	}
 }
