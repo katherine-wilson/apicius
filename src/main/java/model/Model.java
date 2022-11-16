@@ -39,6 +39,12 @@ public class Model implements Serializable {
 		initializeIngredients();
 	}
 	
+	// skips initialization of user data for testing
+	public Model(boolean testing) {
+		db = new DB();
+		initializeIngredients();
+	}
+	
 	public Recipe[] searchDatabase(String keyword) throws Exception {
 		return db.Search(keyword);
 	}

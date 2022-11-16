@@ -13,7 +13,7 @@ public class ControllerTest {
 	//tests all controller general methods
 	@Test
 	void controllerGeneral() {
-		Model m  = new Model();
+		Model m  = new Model(true);
 		Controller c = new Controller(m);
 		
 		Recipe recipe1 = new Recipe("meatloaf");//first letter gets made uppercase
@@ -35,7 +35,7 @@ public class ControllerTest {
 		
 		//checks the getFavorites method
 		ArrayList<Recipe> fav = c.getFavorites();
-		assert(fav.get(0).getName().equals("Meatloaf"));
+		assert(fav.contains(recipe1));
 		
 		//adds 4 pantry items
 		c.addPantryItem("cheese");
