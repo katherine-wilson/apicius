@@ -23,7 +23,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.RangeSlider?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="595.0" prefWidth="956.0" style="-fx-background-color: #F0EAE4;" xmlns="http://javafx.com/javafx/17-0-1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#escapeMenu" prefHeight="595.0" prefWidth="956.0" style="-fx-background-color: #F0EAE4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI">
    <children>
       <StackPane prefHeight="595.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -253,11 +253,11 @@
                                                 <Insets />
                                              </VBox.margin>
                                           </HBox>
-                                          <HBox>
+                                          <HBox VBox.vgrow="ALWAYS">
                                              <children>
-                                                <VBox fx:id="ingredientsBox" prefHeight="600.0" prefWidth="225.0">
+                                                <VBox fx:id="ingredientsBox" prefHeight="600.0" prefWidth="282.0">
                                                    <children>
-                                                      <Label alignment="CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="235.0" text="INGREDIENTS:" textAlignment="CENTER" textFill="#5b4f4f">
+                                                      <Label alignment="CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="289.0" text="INGREDIENTS:" textAlignment="CENTER" textFill="#5b4f4f">
                                                          <font>
                                                             <Font name="Corbel Bold" size="19.0" />
                                                          </font>

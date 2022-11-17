@@ -1,8 +1,10 @@
 package view;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -406,6 +408,13 @@ public class GUI extends Application {
 	 */
 	private List<String> allIngredients;
 	/**
+	 * <code>true</code> if changes were made to the pantry while in the
+	 * {@link #pantrySearchMenu} or<br><code>false</code> if no changes
+	 * were made. This is used to determine if the search should be redone
+	 * to reflect pantry changes.
+	 */
+	private boolean pantryChanged = false;
+	/**
 	 * Menu first shown to the user when they click on the 
 	 * {@link #pantryButton}. It displays the user's "virtual pantry"
 	 * (the list of ingredients they have created).
@@ -535,6 +544,7 @@ public class GUI extends Application {
 		GUI.controller = new Controller(model);
 		GUI.stage = stage;
 		GUI.scene = new Scene(menu, 1250, 750);
+		
 		if (recipeSubset == null) {	// loads subset of recipe database for search menu
 			GUI.recipeSubset = new ArrayList<Recipe>();
 			ObjectInputStream input;
@@ -614,8 +624,11 @@ public class GUI extends Application {
 		}
 		
 		if (currentMenu == 's') {	// initializes nodes used in search menu
-			for (Recipe recipe : recipeSubset) {	// initializes recipes in table
-				obsResults.add(recipe);
+			obsResults.clear();
+			for (Recipe recipe : recipeSubset) { // initializes recipes in table
+				if (!obsResults.contains(recipe)) {
+					obsResults.add(recipe);
+				}
 			}
 			
 			searchResults.setPrefHeight(100);   // adjusts table height 
@@ -629,6 +642,7 @@ public class GUI extends Application {
 			
 			slideUp(searchResults);
 		} else if (currentMenu == 'f') {	// initializes the ListView for the favorites menu
+			obsFavorites.clear();
 			for (Recipe recipe : controller.getFavorites()) { // adds each favorite to listview's observable items
 				if (recipe != null) {
 					obsFavorites.add(recipe.getName());
@@ -638,6 +652,8 @@ public class GUI extends Application {
 			favoritesList.setItems(obsFavorites);
 			slideUp(favoritesList);
 		} else if (currentMenu == 'p') {	// initializes ListView for pantry
+			obsIngredients.clear();
+			obsResults.clear();
 			// loads pantry into menu
 			for (String ingredient : controller.getPantry()) {
 				obsIngredients.add(ingredient);
@@ -1061,7 +1077,6 @@ public class GUI extends Application {
 			recipeSteps.setText(currentRecipe.getSteps() + " steps");
 			recipeIngredientCount.setText(currentRecipe.getNumIngredients() + " ingredients");
 			
-			
 			// clears all but first element (VBox label)
 			ingredientsBox.getChildren().subList(1, ingredientsBox.getChildren().size()).clear();
 			directionsBox.getChildren().subList(1, directionsBox.getChildren().size()).clear();
@@ -1069,10 +1084,18 @@ public class GUI extends Application {
 			// adds ingredients to VBox as labels
 			List<String> ingredients = currentRecipe.getIngredients();
 			for (String ingredient : ingredients) {
-				Label ingLabel = new Label("-    " + ingredient);
-				ingLabel.setFont(Font.font("Nirmala UI", 16));
-				ingLabel.setPadding(new Insets(0, 0, 0, 10));
-				ingredientsBox.getChildren().add(ingLabel);
+				String wrapped = wrapText(ingredient, 20);
+				if (ingredient.equals("Salt & Fresh Ground Pepper")) {
+					System.out.println("WRAPPED: " + wrapped);
+				}
+				CheckBox ingBox = new CheckBox(wrapped);
+				ingBox.setFont(Font.font("Nirmala UI", 16));
+				ingBox.setPadding(new Insets(10, 0, 0, 10));
+				ingBox.setOnMouseClicked(e -> toggleIngredient(ingBox.isSelected(), ingredient));
+				if (controller.getPantry().contains(ingredient)) {	// if ingredient in user's pantry
+					ingBox.setSelected(true); 	// make sure box is checked
+				}
+				ingredientsBox.getChildren().add(ingBox);
 			}
 			
 			// adds directions to VBox as labels
@@ -1089,10 +1112,15 @@ public class GUI extends Application {
 	}
 	
 	/**
-	 * Closes the {@link #recipeMenu}.
+	 * Closes the {@link #recipeMenu}. If changes were made in
+	 * to the pantry in the {@link #pantrySearchMenu}, then its
+	 * search results will be updated to match the new pantry.
 	 */
 	public void closeRecipeMenu() {
 		recipeMenu.setVisible(false);
+		if (currentMenu == 'p' && pantryChanged) {
+			makePantrySearch(false); // updates pantry search results 
+		}
 	}
 
 	/**
@@ -1305,6 +1333,76 @@ public class GUI extends Application {
 		slideRight(pantrySearchMenu);
 		resetFilter();
 		filterMenu.setVisible(false);
+	}
+	
+	/**
+	 * Adds or removes an ingredient from the user's pantry based 
+	 * on its <code>CheckBox</code> in the {@link #recipeMenu}. If
+	 * this event occurs in the {@link #pantrySearchMenu}, then the
+	 * search will be redone.
+	 * 
+	 * @param add <code>true</code> if the given ingredient should be added or<br>
+	 * 				<code>false</code> if it should be removed.
+	 * @param ingredient Ingredient <code>String</code> to add/remove from the
+	 * 					user's pantry.
+	 */
+	public void toggleIngredient(boolean add, String ingredient) {
+		pantryChanged = true;
+		if (add) {
+			controller.addPantryItem(ingredient); // adds to model
+			obsIngredients.add(ingredient);	// adds to observable list
+			Collections.sort(obsIngredients, String.CASE_INSENSITIVE_ORDER); // sort list
+		} else {
+			controller.removePantryItem(ingredient); // removes from model
+			obsIngredients.remove(ingredient); // removes from observable list
+		}
+	}
+	
+	/**
+	 * Creates a string with line breaks in it to create the
+	 * illusion of wrapped text.
+	 * 
+	 * @param str <code>String</code> to convert into wrapped text.
+	 * @param rowLen Maximum length of each "row" in the new <code>String</code>.
+	 * @return a wrapped-text version of the given <code>String</code>.
+	 */
+	private String wrapText(String str, int rowLen) {
+		if (str.length() > rowLen) {
+			String[] words = str.split(" ");
+			int curLen = 0;
+			String newStr = "";
+			for (String word : words) {	// iterates over each word, adds to new string
+				if (str.equals("Salt & Fresh Ground Pepper")) {
+					System.out.println(word);
+				}
+				if (curLen + word.length() + 1 > 20) {	// +1 for " "
+					curLen = 0;
+					newStr += "\n";	// adds newline when next word to add exceeds row length
+				}
+				newStr += word + " ";
+				curLen += word.length() + 1;
+			}
+			if (str.equals("Salt & Fresh Ground Pepper")) {
+				System.out.println(newStr);
+				System.out.println(newStr.strip());
+			}
+			return newStr.strip();
+		} else {
+			return str;
+		}
+	}
+	
+	/**
+	 * If the escape key is pressed while the {@link #recipeMenu} is open,
+	 * then the menu will be closed.
+	 * 
+	 * @param key <code>KeyEvent</code>; if its <code>KeyCode</code> is
+	 * <code>ENTER</code>, then the {@link #recipeMenu} will be closed.
+	 */
+	public void escapeMenu(KeyEvent key) {
+		if (key.getCode().equals(KeyCode.ESCAPE)) {
+			closeRecipeMenu();
+		}
 	}
 	
 	// -------------------------------------------[  ANIMATIONS  ]-------------------------------------------------

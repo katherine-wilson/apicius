@@ -24,8 +24,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.RangeSlider?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="595.0" prefWidth="956.0" style="-fx-background-color: #F0EAE4;" xmlns="http://javafx.com/javafx/17-0-1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#escapeMenu" prefHeight="595.0" prefWidth="956.0" style="-fx-background-color: #F0EAE4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI">
    <children>
       <StackPane prefHeight="595.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -159,7 +158,7 @@
       </AnchorPane>
       <AnchorPane fx:id="pantrySearchMenu" layoutX="246.0" layoutY="-2.0" prefHeight="595.0" prefWidth="710.0" style="-fx-background-color: #F5F2F2;" visible="false" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="246.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-2.0">
          <children>
-            <StackPane layoutY="-8.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <StackPane layoutY="-8.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-8.0">
                <children>
                   <Label fx:id="noRecipesFound" alignment="CENTER" contentDisplay="CENTER" prefHeight="100.0" prefWidth="547.0" text="No Recipes Found" textAlignment="CENTER" textFill="#5b4c4c" visible="false">
                      <font>
@@ -168,7 +167,7 @@
                   </Label>
                   <VBox prefHeight="595.0" prefWidth="710.0">
                      <children>
-                        <HBox maxHeight="76.0" maxWidth="1.7976931348623157E308" prefHeight="76.0" prefWidth="710.0" style="-fx-background-color: linear-gradient(to left, #684751, #884B53);" VBox.vgrow="NEVER">
+                        <HBox maxHeight="50.0" maxWidth="1.7976931348623157E308" minHeight="50.0" prefHeight="50.0" prefWidth="710.0" style="-fx-background-color: linear-gradient(to left, #684751, #884B53);" VBox.vgrow="NEVER">
                            <children>
                               <Button fx:id="backButton" ellipsisString="🠔" minHeight="44.0" minWidth="55.0" mnemonicParsing="false" onAction="#returnToPantry" prefHeight="44.0" prefWidth="55.0" style="-fx-background-color: transparent;" styleClass="tool-button" stylesheets="@pantry.css" text="🠔" textFill="#f0eae4" HBox.hgrow="NEVER">
                                  <font>
@@ -348,9 +347,9 @@
                                                 <Insets />
                                              </VBox.margin>
                                           </HBox>
-                                          <HBox>
+                                          <HBox VBox.vgrow="ALWAYS">
                                              <children>
-                                                <VBox fx:id="ingredientsBox" prefHeight="600.0" prefWidth="225.0">
+                                                <VBox fx:id="ingredientsBox" prefHeight="600.0" prefWidth="282.0">
                                                    <children>
                                                       <Label alignment="CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="235.0" text="INGREDIENTS:" textAlignment="CENTER" textFill="#5b4f4f">
                                                          <font>
