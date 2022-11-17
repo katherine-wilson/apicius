@@ -23,7 +23,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.RangeSlider?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#escapeMenu" prefHeight="595.0" prefWidth="956.0" style="-fx-background-color: #F0EAE4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#escapeMenu" prefHeight="595.0" prefWidth="956.0" style="-fx-background-color: #F0EAE4;" xmlns="http://javafx.com/javafx/17-0-1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI">
    <children>
       <StackPane prefHeight="595.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -217,7 +217,7 @@
                         </HBox>
                         <StackPane maxHeight="870.0" maxWidth="1000.0" prefHeight="527.0" prefWidth="686.0" style="-fx-background-color: white;" VBox.vgrow="ALWAYS">
                            <children>
-                              <ScrollPane id="recipe-window" hbarPolicy="NEVER" maxHeight="870.0" maxWidth="1000.0" pannable="true" prefHeight="527.0" prefWidth="686.0" style="-fx-background-color: transparent;" styleClass="recipe-window" vbarPolicy="ALWAYS">
+                              <ScrollPane id="recipe-window" hbarPolicy="NEVER" maxHeight="2000.0" maxWidth="1000.0" pannable="true" prefHeight="527.0" prefWidth="686.0" style="-fx-background-color: transparent;" styleClass="recipe-window" vbarPolicy="ALWAYS">
                                  <content>
                                     <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="870.0" prefWidth="1000.0" style="-fx-background-radius: 20; -fx-background-color: white;">
                                        <children>
@@ -281,7 +281,7 @@
                                           </HBox>
                                        </children>
                                        <padding>
-                                          <Insets top="10.0" />
+                                          <Insets bottom="30.0" top="10.0" />
                                        </padding>
                                     </VBox>
                                  </content>

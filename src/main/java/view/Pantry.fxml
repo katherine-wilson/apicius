@@ -24,7 +24,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.RangeSlider?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#escapeMenu" prefHeight="595.0" prefWidth="956.0" style="-fx-background-color: #F0EAE4;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#escapeMenu" prefHeight="595.0" prefWidth="956.0" style="-fx-background-color: #F0EAE4;" xmlns="http://javafx.com/javafx/17-0-1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI">
    <children>
       <StackPane prefHeight="595.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -108,14 +108,29 @@
                         <AnchorPane />
                      </children>
                   </HBox>
-                  <TextField fx:id="ingredientSearchBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#ingSearchBarHandler" prefHeight="31.0" prefWidth="338.0" promptText="  Ex. &quot;Butter&quot;" style="-fx-background-color: white; -fx-background-radius: 20;" stylesheets="@home.css">
-                     <font>
-                        <Font name="Nirmala UI" size="15.0" />
-                     </font>
+                  <HBox>
                      <VBox.margin>
                         <Insets left="45.0" />
                      </VBox.margin>
-                  </TextField>
+                     <children>
+                        <TextField fx:id="ingredientSearchBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#ingSearchBarHandler" prefHeight="31.0" prefWidth="338.0" promptText="  Ex. &quot;Butter&quot;" style="-fx-background-color: white; -fx-background-radius: 20;" stylesheets="@home.css">
+                           <font>
+                              <Font name="Nirmala UI" size="15.0" />
+                           </font>
+                        </TextField>
+                        <Button mnemonicParsing="false" onMouseClicked="#addIngredient" prefHeight="32.0" prefWidth="27.0" style="-fx-background-color: #FFFFFF00; -fx-text-fill: linear-gradient(to left, #EF656A, #C52C52);" text="+" HBox.hgrow="NEVER">
+                           <HBox.margin>
+                              <Insets left="3.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="Nirmala UI Bold" size="33.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="-20.0" top="-23.0" />
+                           </padding>
+                        </Button>
+                     </children>
+                  </HBox>
                   <HBox fx:id="favoritesButtons" alignment="CENTER_RIGHT" spacing="15.0" stylesheets="@listview.css">
                      <children>
                         <Button fx:id="deleteIngredientButton" mnemonicParsing="false" onAction="#deleteIngredient" prefHeight="40.0" prefWidth="76.0" styleClass="delete-button" text="Delete" textFill="WHITE" visible="false">
@@ -375,7 +390,7 @@
                                           </HBox>
                                        </children>
                                        <padding>
-                                          <Insets top="10.0" />
+                                          <Insets bottom="30.0" top="10.0" />
                                        </padding>
                                     </VBox>
                                  </content>

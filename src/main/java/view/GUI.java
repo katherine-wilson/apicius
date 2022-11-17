@@ -9,9 +9,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+
+
 import controller.Controller;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -545,6 +549,22 @@ public class GUI extends Application {
 		GUI.stage = stage;
 		GUI.scene = new Scene(menu, 1250, 750);
 		
+		// TODO: remove
+		try {
+			ObjectOutputStream output =  new ObjectOutputStream(new FileOutputStream(RECIPE_SUBSET_FILE));
+			Recipe[] recipesArray = controller.searchRecipes("");
+			ArrayList<Recipe> recipes = new ArrayList<Recipe>();
+			for (Recipe r : recipesArray) {
+				if (!recipes.contains(r)) {
+					recipes.add(r);
+				}
+			}
+			output.writeObject(recipes);
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		if (recipeSubset == null) {	// loads subset of recipe database for search menu
 			GUI.recipeSubset = new ArrayList<Recipe>();
 			ObjectInputStream input;
@@ -795,13 +815,13 @@ public class GUI extends Application {
 		
 		// resets slider thumbs and disables them
 		lengthSlider.setLowValue(0);
-		lengthSlider.setHighValue(0);
+		lengthSlider.setHighValue(lengthSlider.getMax());
 		lengthSlider.setDisable(true);
 		stepsSlider.setLowValue(0);
-		stepsSlider.setHighValue(0);
+		stepsSlider.setHighValue(stepsSlider.getMax());
 		stepsSlider.setDisable(true);
 		ingredientsSlider.setLowValue(0);
-		ingredientsSlider.setHighValue(0);
+		ingredientsSlider.setHighValue(ingredientsSlider.getMax());
 		ingredientsSlider.setDisable(true);
 	}
 	
@@ -823,16 +843,96 @@ public class GUI extends Application {
 	}
 	
 	/**
+	 * Calculates what the highest value possible for the 
+	 * <code>RangeSliders</code> should be. This is based on the 
+	 * maximum values found for each filterable column in the
+	 * current search results.
+	 * 
+	 * @param ranges Stores the end-points for each of the three sliders.
+	 * 				 This should be a 3-item array. The end-points are stored
+	 * 				 in the following order: length, steps, ingredients. This
+	 * 				 array should be initialized with all 0 values.
+	 */
+	private void getSliderMaximums(int[] ranges) {
+		Recipe first = obsResults.get(0);
+		ranges[0] = first.getLength();
+		ranges[1] = first.getSteps();
+		ranges[2] = first.getNumIngredients();
+		
+		for (Recipe r : obsResults) {
+			if (r.getLength() > ranges[0]) {
+				ranges[0] = r.getLength();
+			}
+			if (r.getSteps() > ranges[1]) {
+				ranges[1] = r.getSteps();
+			}
+			if (r.getNumIngredients() > ranges[2]) {
+				ranges[2] = r.getNumIngredients();
+			}
+		}
+	}
+	
+	/**
+	 * Formats the given <code>RangeSlider</code> to fit with the
+	 * {@link #filterMenu}.
+	 * 
+	 * @param slider <code>RangeSlider</code> in the {@link #filterMenu}.
+	 * @param max Maximum value of slider.
+	 */
+	private void formatSlider(RangeSlider slider, int max) {
+		if (max == 0) { max = 1; }	// max must be 1 by default
+		if (max < 5) {
+			max = 5;
+		} else {
+			slider.setMax(max + max%5-1);
+		}
+		slider.setMin(0);
+		slider.setMajorTickUnit(5);
+		slider.setMinorTickCount(4);
+		slider.setShowTickMarks(true);
+		slider.setLowValue(0);
+		slider.setHighValue(slider.getMax());
+		slider.setOnMouseReleased(e -> updateSliderLabels());
+		slider.setOnKeyReleased(e -> updateSliderLabels());
+	}
+	
+	/**
+	 * Updates the "label" for the three <code>RangeSliders</code> in the
+	 * {@link #filterMenu} to match the current high and low values of 
+	 * each slider. The label is technically a part of the slider's
+	 * corresponding <code>CheckBox</code>.
+	 */
+	private void updateSliderLabels() {
+		lengthCheckBox.setText("Length (" + (int)lengthSlider.getLowValue() + 
+				"-" + (int)lengthSlider.getHighValue() + " minutes)");
+		
+		stepsCheckBox.setText("Steps (" + (int)stepsSlider.getLowValue() + 
+				"-" + (int)stepsSlider.getHighValue() + " directions)");
+		
+		ingredientsCheckBox.setText("Ingredients (" + (int)ingredientsSlider.getLowValue() + 
+				"-" + (int)ingredientsSlider.getHighValue() + " items)");
+	}
+	
+	
+	/**
 	 * Toggles the {@link #filterMenu}. This cannot
 	 * be done if there are no search results to be
 	 * filtered.
 	 */
 	public void filterButtonHandler() {
-		if (searchResults.isVisible() || filtersActive) {	// can only filter if there are search results/filters present
-			if (filterMenu.isVisible()) {	// toggles filter menu
+		if (searchResults.isVisible() || filtersActive) { // can only filter if there are search results/filters present
+			if (filterMenu.isVisible()) {	// closes filter menu
 				filterMenu.setVisible(false);
-			} else {
+			} else {	// opens filter menu
 				filterMenu.setVisible(true);
+				if (!filtersActive) {	// does not change slider values if filters are applied
+					int[] max = new int[3];
+					getSliderMaximums(max);
+					formatSlider(lengthSlider, max[0]);
+					formatSlider(stepsSlider, max[1]);
+					formatSlider(ingredientsSlider, max[2]);
+					updateSliderLabels();
+				}
 			}
 		}
 	}
@@ -952,6 +1052,10 @@ public class GUI extends Application {
 	 * the <code>Search</code> and <code>Pantry</code> menus.
 	 */
 	public void filterResults() {
+		if (currentMenu == 'p') {	// resets pantry results
+			makePantrySearch(false);
+		}
+		
 		filterMenu.setVisible(false);
 		
 		int[][] ranges = new int[3][2];	// inclusive min/max for each value
@@ -1209,31 +1313,38 @@ public class GUI extends Application {
 	// -------------------------------------------[  PANTRY METHODS  ]-------------------------------------------------
 	/**
 	 * Adds the ingredient typed by the user to the their {@link #ingredientsList} 
-	 * when they press <code>ENTER</code>. If the ingredient is not in the 
-	 * {@link #allIngredients} list (or it has already been added by the user), 
-	 * then the addition will be rejected and the {@link #ingredientSearchBar}
-	 * will shake and display an error message.
+	 * when they press <code>ENTER</code>.
 	 * 
 	 * @param key <code>KeyEvent</code> triggered by the user. Ignores all inputs
 	 * 			  except for <code>KeyCode ENTER</code>.
 	 */
 	public void ingSearchBarHandler(KeyEvent key) {
 		if (key.getCode().equals(KeyCode.ENTER)) {
-			String ingredient = titleCase(ingredientSearchBar.getText().strip());
-			if (controller.addPantryItem(ingredient)) {	// add succeeds
-				obsIngredients.add(ingredient);	// update observables
-				Collections.sort(obsIngredients, String.CASE_INSENSITIVE_ORDER); // sort list
-			} else {	// failed to add ingredient to pantry
-				quickShake(ingredientSearchBar);	// shake searchBar
-				if (obsIngredients.contains(ingredient)) {	// pantry already has ingredient...
-					ingredientSearchBar.setPromptText("Already in your pantry!");
-				} else {	// ingredient given that isn't in ingredient list
-					ingredientSearchBar.setPromptText("Invalid ingredient");
-				}
-				ingredientSearchBar.getParent().requestFocus();	// defocuses search bar to show prompt
-			}
-			ingredientSearchBar.clear();	// clears user's text from search bar
+			addIngredient();
 		}
+	}
+	
+	/**
+	 * Adds the ingredient typed by the user into the {@link #ingredientSearchBar}.
+	 * If the ingredient is not in the {@link #allIngredients} list (or it has already
+	 * been added by the user), then the addition will be rejected and the
+	 * {@link #ingredientSearchBar} will shake and display an error message.
+	 */
+	public void addIngredient() {
+		String ingredient = titleCase(ingredientSearchBar.getText().strip());
+		if (controller.addPantryItem(ingredient)) {	// add succeeds
+			obsIngredients.add(ingredient);	// update observables
+			Collections.sort(obsIngredients, String.CASE_INSENSITIVE_ORDER); // sort list
+		} else {	// failed to add ingredient to pantry
+			quickShake(ingredientSearchBar);	// shake searchBar
+			if (obsIngredients.contains(ingredient)) {	// pantry already has ingredient...
+				ingredientSearchBar.setPromptText("Already in your pantry!");
+			} else {	// ingredient given that isn't in ingredient list
+				ingredientSearchBar.setPromptText("Invalid ingredient");
+			}
+			ingredientSearchBar.getParent().requestFocus();	// defocuses search bar to show prompt
+		}
+		ingredientSearchBar.clear();	// clears user's text from search bar
 	}
 	
 	/**

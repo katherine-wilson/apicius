@@ -55,7 +55,7 @@ public class Recipe implements Serializable {
 	 */
 	public Recipe(String name) {
 		this.name = titleCase(name);
-		this.length = -1;
+		this.length = 0;
 		this.ingredients = new ArrayList<String>();
 		this.directions = new ArrayList<String>();
 	}
