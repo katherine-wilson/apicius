@@ -609,7 +609,7 @@ public class GUI extends Application {
 		if (currentMenu == 's' || currentMenu == 'p') { // initializes the TableView for the pantry/search menu
 			// sets up cell factories for each row
 			recipeNameCol.setCellValueFactory(new PropertyValueFactory<Recipe, String>("name"));
-			recipeNameCol.setSortType(TableColumn.SortType.DESCENDING);	// sorts table by name by default
+			recipeNameCol.setSortType(TableColumn.SortType.ASCENDING);	// sorts table by name by default
 			recipeNameCol.setStyle("-fx-font-family: 'Dubai Medium'; -fx-font-size: 20; -fx-alignment: 'CENTER_LEFT'; -fx-padding: 0 0 0 20;");
 			lengthCol.setCellValueFactory(new PropertyValueFactory<Recipe, Integer>("length"));
 			lengthCol.setStyle("-fx-font-size: 20");
@@ -648,6 +648,7 @@ public class GUI extends Application {
 					obsResults.add(recipe);
 				}
 			}
+			Collections.sort(obsResults);
 			
 			searchResults.setPrefHeight(100);   // adjusts table height 
 			
@@ -910,7 +911,6 @@ public class GUI extends Application {
 		ingredientsCheckBox.setText("Ingredients (" + (int)ingredientsSlider.getLowValue() + 
 				"-" + (int)ingredientsSlider.getHighValue() + " items)");
 	}
-	
 	
 	/**
 	 * Toggles the {@link #filterMenu}. This cannot
@@ -1257,7 +1257,9 @@ public class GUI extends Application {
 	 */
 	public void toggleFavorite() {
 		if (!controller.getFavorites().contains(currentRecipe)) {	// adds to favorites
-			recipeFavoriteButton.setStyle("-fx-background-color: linear-gradient(to left, #F27440, #CB1349); -fx-text-fill: white;");
+			if (currentMenu != 'f') {
+				recipeFavoriteButton.setStyle("-fx-background-color: linear-gradient(to left, #F27440, #CB1349); -fx-text-fill: white;");
+			}
 			controller.addToFavorites(currentRecipe);
 		} else {													// removes from favorites
 			if (recipeFavoriteButton != null) {

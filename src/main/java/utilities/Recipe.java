@@ -20,7 +20,7 @@ import java.util.List;
  * @author Katherine Wilson
  * @author Kyle Clements
  */
-public class Recipe implements Serializable {
+public class Recipe implements Serializable, Comparable<Recipe> {
 	// -------------------------------------------[  FIELDS  ]-----------------------------------------------
 	/**
 	 * Unique identifier for this class in the serialization process
@@ -205,6 +205,23 @@ public class Recipe implements Serializable {
 			}
 			return false;
 		}
+	}
+	
+	@Override
+	/**
+	 * Compares two recipes by their names.
+	 * 
+	 * @param r <code>Recipe</code> to compare to this one.
+	 * 
+	 * @return an <code>int</code> representing the results
+	 * of the comparison. If the value is 0, they are equal.
+	 * If the value is less than 0, this object is lexicographically
+	 * less than the given <code>Recipe</code>. The opposite
+	 * is true for a value greater than 0.
+	 * 
+	 */
+	public int compareTo(Recipe r) {
+		return this.getName().compareTo(r.getName());
 	}
 	
 	// ---------------------------------------[  PRIVATE METHODS  ]------------------------------------------
