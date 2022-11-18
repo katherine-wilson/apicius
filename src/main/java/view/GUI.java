@@ -1292,7 +1292,7 @@ public class GUI extends Application {
 			obsFavorites.remove(index);
 			obsFavorites.add(index-1, currentRecipe.getName());
 			favoritesList.getSelectionModel().select(index-1);
-			controller.moveFavoriteUp(index, currentRecipe);
+			controller.moveFavoriteUp(currentRecipe);
 		}
 	}
 	
@@ -1306,7 +1306,7 @@ public class GUI extends Application {
 			obsFavorites.remove(index);
 			obsFavorites.add(index+1, currentRecipe.getName());
 			favoritesList.getSelectionModel().select(index+1);
-			controller.moveFavoriteDown(index, currentRecipe);
+			controller.moveFavoriteDown(currentRecipe);
 		}
 	}
 	
@@ -1727,6 +1727,6 @@ public class GUI extends Application {
 			}
 			return newString.substring(0, newString.length() - 1);
 		}
-		return str;
+		return str.toUpperCase();
 	}
 }

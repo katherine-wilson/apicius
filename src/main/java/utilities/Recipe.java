@@ -123,9 +123,9 @@ public class Recipe implements Serializable, Comparable<Recipe> {
 		for (int i = 0; i < this.ingredients.size(); i++) {
 			String ingredient = this.ingredients.get(i);
 			if (i == this.ingredients.size()-1) {
-				ingredientString = ingredientString + ingredient;
+				ingredientString += ingredient;
 			} else {
-				ingredientString = ingredientString + ingredient + "\n";
+				ingredientString += ingredient + "\n";
 			}
 		}
 		return ingredientString;
@@ -254,6 +254,6 @@ public class Recipe implements Serializable, Comparable<Recipe> {
 			}
 			return newString.substring(0, newString.length() - 1);
 		}
-		return str;
+		return str.toUpperCase();
 	}
 }

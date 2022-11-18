@@ -170,11 +170,13 @@ public class Model implements Serializable {
 	 * 
 	 * @param keyword Search query to send to database.
 	 * @return a list of recipe search results.
-	 * @throws Exception when a database-level issue occurs. This
-	 * cannot be resolved.
 	 */
-	public Recipe[] searchDatabase(String keyword) throws Exception {
-		return db.Search(keyword);
+	public Recipe[] searchDatabase(String keyword) {
+		try {
+			return db.Search(keyword);
+		} catch (Exception e) {
+			return new Recipe[0];
+		}
 	}
 	
 	/**
@@ -211,10 +213,10 @@ public class Model implements Serializable {
 	 * Moves a favorite up by one index in the user's favorites
 	 * list.
 	 * 
-	 * @param index Position of the recipe in the list.
 	 * @param recipe Recipe to move up.
 	 */
-	public void moveFavoriteUp(int index, Recipe recipe) {
+	public void moveFavoriteUp(Recipe recipe) {
+		int index = favorites.indexOf(recipe);
 		if (index != 0) {	// if not first in list
 			favorites.remove(index);
 			favorites.add(index-1, recipe);
@@ -225,10 +227,10 @@ public class Model implements Serializable {
 	 * Moves a favorite down by one index in the user's favorites
 	 * list.
 	 * 
-	 * @param index Position of the recipe in the list.
 	 * @param recipe Recipe to move down.
 	 */
-	public void moveFavoriteDown(int index, Recipe recipe) {
+	public void moveFavoriteDown(Recipe recipe) {
+		int index = favorites.indexOf(recipe);
 		if (index != favorites.size() - 1) { // if not last in list
 			favorites.remove(index);
 			favorites.add(index+1, recipe);
@@ -268,7 +270,7 @@ public class Model implements Serializable {
 	 * 				contains the ingredient.
 	 */
 	public boolean addPantryItem(String item) {
-		if (pantryList.contains(item)) {
+		if (pantryList.contains(titleCase(item))) {
 			return false;
 		} else {
 			pantryList.add(titleCase(item));
@@ -296,11 +298,13 @@ public class Model implements Serializable {
 	 * 
 	 * @return A list of recipes the user can make with what's in
 	 * 			their virtual pantry.
-	 * @throws Exception when a database-level issue occurs. This
-	 * cannot be resolved. 
 	 */
-	public List<Recipe> searchWithPantry() throws Exception {
-		return db.PantryQuery(getPantry());
+	public List<Recipe> searchWithPantry() {
+		try {
+			return db.PantryQuery(getPantry());
+		} catch (Exception e) {
+			return new ArrayList<Recipe>();
+		}
 	}
 	
 	// --------------------------------------[  PRIVATE METHODS  ]----------------------------------------
@@ -333,6 +337,6 @@ public class Model implements Serializable {
 			}
 			return newString.substring(0, newString.length() - 1);
 		}
-		return str;
+		return str.toUpperCase();
 	}
 }

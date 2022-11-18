@@ -67,11 +67,7 @@ public class Controller {
 	 * 			match the given query.
 	 */
 	public Recipe[] searchRecipes(String keyword) {
-		try {
-			return model.searchDatabase(keyword.toLowerCase());
-		} catch (Exception e) {
-			return new Recipe[0];
-		}
+		return model.searchDatabase(keyword.toLowerCase());
 	}
 	
 	/**
@@ -116,21 +112,19 @@ public class Controller {
 	/**
 	 * Moves the given recipe up by one index in the user's favorites list.
 	 * 
-	 * @param index Index of the recipe in the user's favorites list.
 	 * @param recipe Recipe to be moved up.
 	 */
-	public void moveFavoriteUp(int index, Recipe recipe) {
-		model.moveFavoriteUp(index, recipe);
+	public void moveFavoriteUp(Recipe recipe) {
+		model.moveFavoriteUp(recipe);
 	}
 	
 	/**
 	 * Moves the given recipe down by one index in the user's favorites list.
 	 * 
-	 * @param index Index of the recipe in the user's favorites list.
 	 * @param recipe Recipe to be moved down.
 	 */
-	public void moveFavoriteDown(int index, Recipe recipe) {
-		model.moveFavoriteDown(index, recipe);
+	public void moveFavoriteDown(Recipe recipe) {
+		model.moveFavoriteDown(recipe);
 	}
 	
 	/**
@@ -190,11 +184,7 @@ public class Controller {
 	 * 			based on what's in their virtual pantry.
 	 */
 	public List<Recipe> searchWithPantry() {
-		try {
-			return model.searchWithPantry();
-		} catch (Exception e) {
-			return new ArrayList<Recipe>();
-		}
+		return model.searchWithPantry();
 	}
 	
 	/**
