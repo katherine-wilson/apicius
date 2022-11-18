@@ -12,7 +12,7 @@ import utilities.Recipe;
  *  
  *  Missing one branch in near-impossible titleCase() scenario.
  */
-public class RecipeTests {
+public class RecipeTest {
 	@Test
 	void construction() {	// checks setters/getters
 		Recipe recipe = new Recipe("meatloaf");
