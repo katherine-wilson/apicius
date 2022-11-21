@@ -1273,7 +1273,17 @@ public class GUI extends Application {
 			
 			// Set text fields for recipe menu
 			recipeTitle.setText(currentRecipe.getName());
-			recipeLength.setText(currentRecipe.getLength() + " minutes");
+			if (currentRecipe.getLength() > 60) {
+				if (currentRecipe.getLength() == 60) {
+					recipeLength.setText("1 hour");
+				} else if (currentRecipe.getLength() % 60 == 0) {
+					recipeLength.setText((int)currentRecipe.getLength()/60 + " hours");
+				} else {
+					recipeLength.setText((int)currentRecipe.getLength()/60 + "hr" + currentRecipe.getLength()%60 +"m");
+				}
+			} else {
+				recipeLength.setText(currentRecipe.getLength() + " minutes");
+			}
 			recipeSteps.setText(currentRecipe.getSteps() + " steps");
 			recipeIngredientCount.setText(currentRecipe.getNumIngredients() + " ingredients");
 			
@@ -1616,6 +1626,10 @@ public class GUI extends Application {
 		slide.setToY(0);
 		slide.setByY(0);
 		slide.play();
+		if(currentMenu == 'f' && obsFavorites.size() == 0) {
+			slide.setDuration(Duration.millis(300));
+		}
+		
 		if (bounce) {
 			slide.setOnFinished(e -> bounce(toSlide, true));
 		}
@@ -1637,7 +1651,7 @@ public class GUI extends Application {
 	private void slideUp(Node toSlide) {
 		toSlide.setTranslateY(1000);
 		TranslateTransition slide = new TranslateTransition();
-		slide.setDuration(Duration.millis(600));
+		slide.setDuration(Duration.millis(650));
 		slide.setNode(toSlide);
 		slide.setToY(0);
 		slide.setByY(0);
