@@ -17,6 +17,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
+
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#escapeMenu" prefHeight="595.0" prefWidth="956.0" style="-fx-background-color: #F0EAE4;" xmlns="http://javafx.com/javafx/17-0-1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GUI">
    <children>
       <StackPane prefHeight="595.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -227,7 +228,8 @@
                   </VBox>
                </children>
             </AnchorPane>
-         </children></AnchorPane>
+         </children>
+      </AnchorPane>
    </children>
    <opaqueInsets>
       <Insets />

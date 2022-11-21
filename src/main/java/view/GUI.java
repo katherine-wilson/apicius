@@ -1480,6 +1480,7 @@ public class GUI extends Application {
 	 * @see #makePantrySearch(boolean)
 	 */
 	public void pantrySearchButtonHandler() {
+		pantrySearchButton.setDisable(true);	// prevents user from clicking before animation ends
 		makePantrySearch(true);
 	}
 	
@@ -1756,7 +1757,6 @@ public class GUI extends Application {
 		slide.setToX(2000);
 		slide.setByX(2000);
 		slide.play();
-		pantrySearchButton.setDisable(true);	// prevents user from clicking before animation ends
 		slide.setOnFinished(e -> {
 			toSlide.setVisible(false);
 			pantrySearchButton.setDisable(false);
