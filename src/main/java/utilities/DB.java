@@ -49,40 +49,54 @@ public class DB {
     {
     	try 
     	{
-    		
-    		Map<String,String> expressionAttributesNames = new HashMap<>();
-    	    expressionAttributesNames.put("#recipe","recipe");
-    	 
-    	    Map<String,AttributeValue> expressionAttributeValues = new HashMap<>();
-    	    expressionAttributeValues.put(":recipeValue",new AttributeValue().withS(sSearchStr));
-    	    
-    	    ScanRequest scanRequest = new ScanRequest()
-    	    	    .withTableName(sTableName)
-    	    	    .withFilterExpression("contains(recipe, :recipeValue)")
-    	    	    .withExpressionAttributeValues(expressionAttributeValues);
-    	    
+    		sSearchStr = sSearchStr.toLowerCase().replace(" ", "");
+    		ScanRequest scanRequest = new ScanRequest()
+       	    	    .withTableName(sTableName);
     	    ScanResult result = dynamoDB.scan(scanRequest);
     	    List<Map<String,AttributeValue>> items = result.getItems();
-    	    Recipe[] recipesFound = new Recipe[items.size()];
+    	    List<Recipe> recipesFound = new ArrayList<Recipe>();
     	    for (int i = 0; i < items.size(); i++) 
     	    {
     	    	Map<String, AttributeValue> curPair = items.get(i);
     	    	String recipeName = curPair.get("recipe").getS();
-    	    	String ingredientsStr = curPair.get("ingredients").getS();
-    	    	ingredientsStr = ingredientsStr.replace("'", "");
-    	    	ingredientsStr = ingredientsStr.replace("[", "");
-    	    	ingredientsStr = ingredientsStr.replace("]", "");
-    	    	String [] split = ingredientsStr.split("\\s*,\\s*");
-    	    	List<String> ingredients = Arrays.asList(split);
-    	    	Recipe curRecipe = new Recipe(recipeName);
-    	    	for (int j = 0; j < ingredients.size(); j++) 
+    	    	String lowerName = recipeName.toLowerCase().replace(" ", "");
+    	    	if (lowerName.contains(sSearchStr)) 
     	    	{
-    	    		curRecipe.addIngredient(ingredients.get(j));
-    	    	}
-    	    	recipesFound[i] = curRecipe;
-    	    }
+	    
+	    	    	String ingredientsStr = curPair.get("ingredients").getS();
+	    	    	String recipeLengthStr = curPair.get("minutes").getN();
+	    	    	int recipeLength = Integer.valueOf(recipeLengthStr);
+	    	    	ingredientsStr = ingredientsStr.replace("'", "");
+	    	    	ingredientsStr = ingredientsStr.replace("[", "");
+	    	    	ingredientsStr = ingredientsStr.replace("]", "");
+	    	    	String [] split = ingredientsStr.split("\\s*,\\s*");
+	    	    	String stepsStr = curPair.get("steps").getS();
+	    	    	stepsStr = stepsStr.replace(" , ", "-");
+	    	    	stepsStr = stepsStr.replace("', 'f'", "");
+	    	    	stepsStr = stepsStr.replace("', 'f ", "");
+	    	    	stepsStr = stepsStr.replace("'", "");
+	    	    	stepsStr = stepsStr.replace("[", "");
+	    	    	stepsStr = stepsStr.replace("]", "");
+	    	    	String [] stepsSplit = stepsStr.split("\\s*,\\s*");
+	    	    	List<String> ingredients = Arrays.asList(split);
+	    	    	List<String> steps = Arrays.asList(stepsSplit);
+	    	    	Recipe curRecipe = new Recipe(recipeName);
+	    	    	curRecipe.setLength(recipeLength);
+	    	    	for (int j = 0; j < ingredients.size(); j++) 
+	    	    	{
+	    	    		curRecipe.addIngredient(ingredients.get(j));
+	    	    	}
+	    	    	for (int k = 0; k < steps.size(); k++) 
+	    	    	{
+	    	    		curRecipe.addDirection(steps.get(k));
+	    	    	}
+	    	    	recipesFound.add(curRecipe);
+	    	    }
+	    	}
     	    PantryQuery(null);
-    	    return recipesFound;
+    	    Recipe[] retArray = new Recipe[recipesFound.size()];
+    	    retArray = recipesFound.toArray(retArray);
+    	    return retArray;
 
         } catch (AmazonServiceException ase) {
             System.out.println("Caught an AmazonServiceException, which means your request made it "
@@ -121,17 +135,32 @@ public class DB {
    	    	Map<String, AttributeValue> curPair = items.get(i);
    	    	String recipeName = curPair.get("recipe").getS();
    	    	String ingredientsStr = curPair.get("ingredients").getS();
+   	    	String recipeLengthStr = curPair.get("minutes").getN();
+	    	int recipeLength = Integer.valueOf(recipeLengthStr);
 	    	ingredientsStr = ingredientsStr.replace("'", "");
 	    	ingredientsStr = ingredientsStr.replace("[", "");
 	    	ingredientsStr = ingredientsStr.replace("]", "");
 	    	String [] split = ingredientsStr.split("\\s*,\\s*");
+	    	String stepsStr = curPair.get("steps").getS();
+	    	stepsStr = stepsStr.replace(" , ", "-");
+	    	stepsStr = stepsStr.replace("', 'f'", "");
+	    	stepsStr = stepsStr.replace("', 'f ", "");
+	    	stepsStr = stepsStr.replace("'", "");
+	    	stepsStr = stepsStr.replace("[", "");
+	    	stepsStr = stepsStr.replace("]", "");
+	    	String [] stepsSplit = stepsStr.split("\\s*,\\s*");
+	    	List<String> steps = Arrays.asList(stepsSplit);
 	    	List<String> ingredients = Arrays.asList(split);
    	    	Recipe curRecipe = new Recipe(recipeName);
-   	    	
+   	    	curRecipe.setLength(recipeLength);
    	    	for (int j = 0; j < ingredients.size(); j++) 
    	    	{
    	    		curRecipe.addIngredient(ingredients.get(j));
    	    	}
+   	    	for (int k = 0; k < steps.size(); k++) 
+	    	{
+	    		curRecipe.addDirection(steps.get(k));
+	    	}
    	    	if (pantry.containsAll(curRecipe.getIngredients())) 
    	    	{
    	    		availableRecipes.add(curRecipe);
