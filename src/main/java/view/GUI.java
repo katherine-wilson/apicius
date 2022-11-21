@@ -649,7 +649,6 @@ public class GUI extends Application {
 				}
 			}
 			Collections.sort(obsResults);
-			
 			searchResults.setPrefHeight(100);   // adjusts table height 
 			
 			// adds tooltip to filter/search buttons
@@ -763,6 +762,7 @@ public class GUI extends Application {
 			for (Recipe recipe : results) {		// adds recipes from results to observable list
 				obsResults.add(recipe);
 			}
+			Collections.sort(obsResults);
 			recipesFound.setText(obsResults.size() + " recipes found");
 			filterResults();
 			if (obsResults.size() != 0) {
