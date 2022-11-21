@@ -284,12 +284,9 @@ public class Recipe implements Serializable, Comparable<Recipe> {
 					newName += words[i] + " ";
 				}
 			}
-			if (words.length == 2) {
-				return newName.substring(0, newName.length()-1);
-			} else if (words[words.length-1].equals("S") || 
+			if (words[words.length-1].equals("S") || 
 							words[words.length-1].equals("T")) {
-				return newName.substring(0, newName.length()-1);
-				
+				return newName.substring(0, newName.length()-1);	
 			} else {
 				return newName + words[words.length-1];
 			}

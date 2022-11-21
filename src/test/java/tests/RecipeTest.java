@@ -145,5 +145,7 @@ public class RecipeTest {
 		assert(recipe.getName().equals("I Can't"));
 		recipe.setName("i can s");	// last word - s
 		assert(recipe.getName().equals("I Can's"));
+		recipe.setName("italian bread");
+		assert(recipe.getName().equals("Italian Bread"));
 	}
 }
