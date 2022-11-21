@@ -8,7 +8,7 @@ import utilities.Recipe;
 
 /*
  *  JUnit testing class that is designed to test the Recipe class.
- *  100% Statement Coverage, 96% Branch Coverage.
+ *  100% Statement Coverage, 98% Branch Coverage.
  *  
  *  Missing one branch in near-impossible titleCase() scenario.
  */
@@ -43,8 +43,8 @@ public class RecipeTest {
 		recipe.addIngredient("\"apple\"");
 		recipe.addIngredient("x");
 		recipe.addIngredient("mac n cheese");
-		recipe.addDirection("cook the meatloaf");
-		recipe.addDirection("take out meatloaf");
+		recipe.addDirection("cook the meatloaf!");
+		recipe.addDirection("take out meatloaf.");
 		recipe.addDirection("season meatloaf");
 		recipe.addDirection("eat meatloaf");
 		
@@ -56,10 +56,10 @@ public class RecipeTest {
 		assertEquals(recipe.getIngredients().get(4), "\"Apple\"");
 		assertEquals(recipe.getIngredients().get(5), "X");
 		assertEquals(recipe.getIngredients().get(6), "Mac N Cheese");
-		assertEquals(recipe.getDirections().get(0), "cook the meatloaf");
-		assertEquals(recipe.getDirections().get(1), "take out meatloaf");
-		assertEquals(recipe.getDirections().get(2), "season meatloaf");
-		assertEquals(recipe.getDirections().get(3), "eat meatloaf");
+		assertEquals(recipe.getDirections().get(0), "Cook the meatloaf!");
+		assertEquals(recipe.getDirections().get(1), "Take out meatloaf.");
+		assertEquals(recipe.getDirections().get(2), "Season meatloaf.");
+		assertEquals(recipe.getDirections().get(3), "Eat meatloaf.");
 		assertEquals(recipe.getIngredientString(), "Meat\nWorchestershire Sauce\nSalt\nPepper\n\"Apple\"\nX\nMac N Cheese");
 	}
 	
@@ -131,5 +131,19 @@ public class RecipeTest {
 		assert(b.compareTo(c) < 0);
 		assert(c.compareTo(a) > 0);
 		assert(c.compareTo(b) > 0);
+	}
+	
+	@Test
+	void fixContractions() {	// tests the fixContractions function
+		Recipe recipe = new Recipe("apple s");	// one word, s-contraction
+		assert(recipe.getName().equals("Apple's"));
+		recipe.setName("don t");				// one word, t-contraction
+		assert(recipe.getName().equals("Don't"));
+		recipe.setName("i can t believe it s not butter");	// many words, s + t contractions
+		assert(recipe.getName().equals("I Can't Believe It's Not Butter"));
+		recipe.setName("i can t");	// last word - t
+		assert(recipe.getName().equals("I Can't"));
+		recipe.setName("i can s");	// last word - s
+		assert(recipe.getName().equals("I Can's"));
 	}
 }
