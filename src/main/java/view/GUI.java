@@ -1,10 +1,8 @@
 package view;
 
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -1738,7 +1736,11 @@ public class GUI extends Application {
 		bounce.setAutoReverse(true);
 		bounce.play(); bounce.stop(); bounce.play();
 		if (currentMenu == 'p' && pantryIngredientsMenu != null) {
-			bounce.setOnFinished(e -> pantryIngredientsMenu.setVisible(false));
+			backButton.setDisable(true);	// prevents clicking in middle of animation
+			bounce.setOnFinished(e -> { 
+				pantryIngredientsMenu.setVisible(false);
+				backButton.setDisable(false);
+			});
 		}
 	}
 	
@@ -1754,7 +1756,11 @@ public class GUI extends Application {
 		slide.setToX(2000);
 		slide.setByX(2000);
 		slide.play();
-		slide.setOnFinished(e -> toSlide.setVisible(false));
+		pantrySearchButton.setDisable(true);	// prevents user from clicking before animation ends
+		slide.setOnFinished(e -> {
+			toSlide.setVisible(false);
+			pantrySearchButton.setDisable(false);
+		});
 	}
 	
 	// -------------------------------------------[  OTHER  ]-------------------------------------------------
