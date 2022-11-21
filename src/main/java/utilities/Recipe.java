@@ -67,7 +67,7 @@ public class Recipe implements Serializable, Comparable<Recipe> {
 	 * @return the name of this recipe as a <code>String</code>.
 	 */
 	public String getName() {
-		return name;
+		return fixContractions(name);
 	}
 	
 	/**
@@ -262,5 +262,22 @@ public class Recipe implements Serializable, Comparable<Recipe> {
 			return newString.substring(0, newString.length() - 1);
 		}
 		return str.toUpperCase();
+	}
+	
+	private String fixContractions(String str) {
+		String[] words = str.split(" ");
+		String newName = "";
+		if (words.length > 1) {
+			for (int i = 0; i < words.length - 1; i++) {
+				if (words[i+1].equals("S") || words[i+1].equals("T")) {
+					newName += words[i] + "'" + words[i+1].toLowerCase() + " ";
+				} else if (!words[i].equals("S") && !words[i].equals("T")) {
+					newName += words[i] + " ";
+				}
+			}
+			return newName + words[words.length-1];
+		} else {
+			return str;
+		}
 	}
 }

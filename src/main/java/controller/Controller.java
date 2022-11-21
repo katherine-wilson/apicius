@@ -67,7 +67,7 @@ public class Controller {
 	 * 			match the given query.
 	 */
 	public Recipe[] searchRecipes(String keyword) {
-		return model.searchDatabase(keyword.toLowerCase());
+		return model.searchDatabase(keyword.toLowerCase().replaceAll("'", ""));
 	}
 	
 	/**

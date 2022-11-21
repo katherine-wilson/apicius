@@ -854,14 +854,11 @@ public class GUI extends Application {
 	 */
 	private void getSliderMaximums(int[] ranges) {
 		Recipe first = obsResults.get(0);
-		ranges[0] = first.getLength();
+		ranges[0] = 5;
 		ranges[1] = first.getSteps();
 		ranges[2] = first.getNumIngredients();
 		
 		for (Recipe r : obsResults) {
-			if (r.getLength() > ranges[0]) {
-				ranges[0] = r.getLength();
-			}
 			if (r.getSteps() > ranges[1]) {
 				ranges[1] = r.getSteps();
 			}
@@ -893,6 +890,9 @@ public class GUI extends Application {
 		slider.setHighValue(slider.getMax());
 		slider.setOnMouseReleased(e -> updateSliderLabels());
 		slider.setOnKeyReleased(e -> updateSliderLabels());
+		if (slider == lengthSlider) {
+			slider.setShowTickLabels(false);
+		}
 	}
 	
 	/**
@@ -902,14 +902,87 @@ public class GUI extends Application {
 	 * corresponding <code>CheckBox</code>.
 	 */
 	private void updateSliderLabels() {
-		lengthCheckBox.setText("Length (" + (int)lengthSlider.getLowValue() + 
-				"-" + (int)lengthSlider.getHighValue() + " minutes)");
+		int lengthMin = (int) lengthSlider.getLowValue();
+		int lengthMax = (int) lengthSlider.getHighValue();
+		if (lengthMin == 0 && lengthMax == 0) {
+			lengthCheckBox.setText("Length (5 minutes and under)");
+		} else if (lengthMin == 0 && lengthMax == 4) {
+			lengthCheckBox.setText("Length (Any Time)");
+		} else if (lengthMin == 4 && lengthMax == 4) {
+			lengthCheckBox.setText("Length (Over an hour)");
+		} else {
+			String min = "";
+			String max = "";
+			if (lengthMin == 0) {
+				min = "0";
+			} else if (lengthMin == 1) {
+				min = "15";
+			} else if (lengthMin == 2) {
+				min = "30";
+			} else if (lengthMin == 3) {
+				min = "1";
+			}
+			
+			if (lengthMax == 1) {
+				max = "15 minutes";
+			} else if (lengthMax == 2) {
+				max = "30 minutes";
+			} else if (lengthMax == 3) {
+				max = "1 hour";
+			} else if (lengthMax == 4) {
+				max = "Over an hour";
+			}
+			
+			if (lengthMin == lengthMax) {	// equal min/max
+				lengthCheckBox.setText("Length (" + max + ")");
+			} else if (lengthMin == 0) {	// no min
+				lengthCheckBox.setText("Length (Up to " + max + ")");
+			} else if (lengthMax == 4) {	// no max
+				if (lengthMin <= 2) {
+					min += " minutes";
+				} else {
+					min += " hour";
+				}
+				lengthCheckBox.setText("Length (At least " + min + ")");
+			} else if (lengthMax >= 3 && lengthMin <= 2) {	// different units (minutes/hours)
+				min += " minutes";
+				lengthCheckBox.setText("Length (" + min + "-" + max + ")");
+			} else {
+				lengthCheckBox.setText("Length (" + min + "-" + max + ")");
+			}
+		}
 		
-		stepsCheckBox.setText("Steps (" + (int)stepsSlider.getLowValue() + 
-				"-" + (int)stepsSlider.getHighValue() + " directions)");
+		int stepsMin = (int) stepsSlider.getLowValue();
+		int stepsMax = (int) stepsSlider.getHighValue();
+		if (stepsMin == stepsMax) {
+			if (stepsMin == 1) {	// equal slider values, singular noun
+				stepsCheckBox.setText("Steps (" + stepsMin + " direction)");
+			} else {				// equal slider values, plural noun
+				stepsCheckBox.setText("Steps (" + stepsMin + " directions)");
+			}
+		} else {
+			if (stepsMax == 1) {	// unequal slider values, singular noun
+				stepsCheckBox.setText("Steps (" + stepsMin + "-" + stepsMax + " direction)");
+			} else {				// unequal slider values, plural noun
+				stepsCheckBox.setText("Steps (" + stepsMin + "-" + stepsMax + " directions)");
+			}
+		}
 		
-		ingredientsCheckBox.setText("Ingredients (" + (int)ingredientsSlider.getLowValue() + 
-				"-" + (int)ingredientsSlider.getHighValue() + " items)");
+		int ingMin = (int) ingredientsSlider.getLowValue();
+		int ingMax = (int) ingredientsSlider.getHighValue();
+		if (ingMin == ingMax) {
+			if (ingMin == 1) {
+				ingredientsCheckBox.setText("Ingredients (" + ingMin + " item)");
+			} else {
+				ingredientsCheckBox.setText("Ingredients (" + ingMin + " items)");
+			}
+		} else {
+			if (ingMax == 1) {
+				ingredientsCheckBox.setText("Ingredients (" + ingMin + "-" + ingMax + " item)");
+			} else {
+				ingredientsCheckBox.setText("Ingredients (" + ingMin + "-" + ingMax + " items)");
+			}
+		}
 	}
 	
 	/**
@@ -987,8 +1060,31 @@ public class GUI extends Application {
 	private int getRanges(int[][] ranges) {
 		int filters = 0;
 		if (lengthCheckBox.isSelected()) {
-			ranges[0][0] = (int) lengthSlider.getLowValue();	// sets minimum
-			ranges[0][1] = (int) lengthSlider.getHighValue();	// sets maximum
+			int lengthLow = (int) lengthSlider.getLowValue();
+			int lengthHigh = (int) lengthSlider.getHighValue();
+			if (lengthLow == 0) {	// determines minimum value
+				ranges[0][0] = 0;
+			} else if (lengthLow == 1) {
+				ranges[0][0] = 15;
+			} else if (lengthLow == 2) {
+				ranges[0][0] = 30;
+			} else if (lengthLow == 3) {
+				ranges[0][0] = 60;
+			} else if (lengthLow == 4) {
+				ranges[0][0] = 61;	// must be over an hour
+			}
+			if (lengthHigh == 0) {	// determines maximum value
+				ranges[0][1] = 5;
+			} else if (lengthHigh == 1) {
+				ranges[0][1] = 15;
+			} else if (lengthHigh == 2) {
+				ranges[0][1] = 30;
+			} else if (lengthHigh == 3) {
+				ranges[0][1] = 60;
+			} else if (lengthHigh == 4) {
+				ranges[0][1] = 999999999;	// no "max"
+			}
+			
 			filters++;
 		}
 		if (stepsCheckBox.isSelected()) {
@@ -1037,7 +1133,6 @@ public class GUI extends Application {
 				return true;
 			}
 		}
-		
 		return false;
 	}
 	
@@ -1163,6 +1258,9 @@ public class GUI extends Application {
 	 * ingredients, and list of steps.
 	 */
 	public void openRecipeMenu() {
+		if (currentMenu != 'f') {
+			hideFilterMenu();
+		}
 		selectRecipe(); // retrieves recipe that was clicked
 		if (currentRecipe != null) {
 			if (recipeFavoriteButton != null) {	// only executes if recipe menu has a favorites button
@@ -1187,9 +1285,6 @@ public class GUI extends Application {
 			List<String> ingredients = currentRecipe.getIngredients();
 			for (String ingredient : ingredients) {
 				String wrapped = wrapText(ingredient, 20);
-				if (ingredient.equals("Salt & Fresh Ground Pepper")) {
-					System.out.println("WRAPPED: " + wrapped);
-				}
 				CheckBox ingBox = new CheckBox(wrapped);
 				ingBox.setFont(Font.font("Nirmala UI", 16));
 				ingBox.setPadding(new Insets(10, 0, 0, 10));
