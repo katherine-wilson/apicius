@@ -264,6 +264,15 @@ public class Recipe implements Serializable, Comparable<Recipe> {
 		return str.toUpperCase();
 	}
 	
+	/**
+	 * Fixes contractions in strings imported from the database. Strings
+	 * containing contractions are usually converted into two words. For
+	 * example, "don't" becomes "don t". This function will fix X's and X't
+	 * contractions in these strings.
+	 * 
+	 * @param str <code>String</code> to repair.
+	 * @return <code>String</code> with its contractions joined together again.
+	 */
 	private String fixContractions(String str) {
 		String[] words = str.split(" ");
 		String newName = "";
