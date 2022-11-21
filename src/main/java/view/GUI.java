@@ -547,22 +547,6 @@ public class GUI extends Application {
 		GUI.stage = stage;
 		GUI.scene = new Scene(menu, 1250, 750);
 		
-		// TODO: remove
-		try {
-			ObjectOutputStream output =  new ObjectOutputStream(new FileOutputStream(RECIPE_SUBSET_FILE));
-			Recipe[] recipesArray = controller.searchRecipes("");
-			ArrayList<Recipe> recipes = new ArrayList<Recipe>();
-			for (Recipe r : recipesArray) {
-				if (!recipes.contains(r)) {
-					recipes.add(r);
-				}
-			}
-			output.writeObject(recipes);
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
 		if (recipeSubset == null) {	// loads subset of recipe database for search menu
 			GUI.recipeSubset = new ArrayList<Recipe>();
 			ObjectInputStream input;
@@ -1629,7 +1613,6 @@ public class GUI extends Application {
 		if(currentMenu == 'f' && obsFavorites.size() == 0) {
 			slide.setDuration(Duration.millis(300));
 		}
-		
 		if (bounce) {
 			slide.setOnFinished(e -> bounce(toSlide, true));
 		}
