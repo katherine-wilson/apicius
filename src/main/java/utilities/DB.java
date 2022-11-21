@@ -7,35 +7,14 @@ import java.util.Map;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Table;
-import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
-import com.amazonaws.services.dynamodbv2.model.Condition;
-import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
-import com.amazonaws.services.dynamodbv2.model.DescribeTableRequest;
-import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
-import com.amazonaws.services.dynamodbv2.model.KeyType;
-import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
-import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
-import com.amazonaws.services.dynamodbv2.model.PutItemResult;
-import com.amazonaws.services.dynamodbv2.model.QueryRequest;
-import com.amazonaws.services.dynamodbv2.model.QueryResult;
-import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
-import com.amazonaws.services.dynamodbv2.model.TableDescription;
-import com.amazonaws.services.dynamodbv2.util.TableUtils;
-import com.amazonaws.services.stepfunctions.builder.states.Iterator;
 
 /**
  * This class searches the DynamoDB table and prints the results
@@ -70,40 +49,54 @@ public class DB {
     {
     	try 
     	{
-    		
-    		Map<String,String> expressionAttributesNames = new HashMap<>();
-    	    expressionAttributesNames.put("#recipe","recipe");
-    	 
-    	    Map<String,AttributeValue> expressionAttributeValues = new HashMap<>();
-    	    expressionAttributeValues.put(":recipeValue",new AttributeValue().withS(sSearchStr));
-    	    
-    	    ScanRequest scanRequest = new ScanRequest()
-    	    	    .withTableName(sTableName)
-    	    	    .withFilterExpression("contains(recipe, :recipeValue)")
-    	    	    .withExpressionAttributeValues(expressionAttributeValues);
-    	    
+    		sSearchStr = sSearchStr.toLowerCase().replace(" ", "");
+    		ScanRequest scanRequest = new ScanRequest()
+       	    	    .withTableName(sTableName);
     	    ScanResult result = dynamoDB.scan(scanRequest);
     	    List<Map<String,AttributeValue>> items = result.getItems();
-    	    Recipe[] recipesFound = new Recipe[items.size()];
+    	    List<Recipe> recipesFound = new ArrayList<Recipe>();
     	    for (int i = 0; i < items.size(); i++) 
     	    {
     	    	Map<String, AttributeValue> curPair = items.get(i);
     	    	String recipeName = curPair.get("recipe").getS();
-    	    	String ingredientsStr = curPair.get("ingredients").getS();
-    	    	ingredientsStr = ingredientsStr.replace("'", "");
-    	    	ingredientsStr = ingredientsStr.replace("[", "");
-    	    	ingredientsStr = ingredientsStr.replace("]", "");
-    	    	String [] split = ingredientsStr.split("\\s*,\\s*");
-    	    	List<String> ingredients = Arrays.asList(split);
-    	    	Recipe curRecipe = new Recipe(recipeName);
-    	    	for (int j = 0; j < ingredients.size(); j++) 
+    	    	String lowerName = recipeName.toLowerCase().replace(" ", "");
+    	    	if (lowerName.contains(sSearchStr)) 
     	    	{
-    	    		curRecipe.addIngredient(ingredients.get(j));
-    	    	}
-    	    	recipesFound[i] = curRecipe;
-    	    }
+	    
+	    	    	String ingredientsStr = curPair.get("ingredients").getS();
+	    	    	String recipeLengthStr = curPair.get("minutes").getN();
+	    	    	int recipeLength = Integer.valueOf(recipeLengthStr);
+	    	    	ingredientsStr = ingredientsStr.replace("'", "");
+	    	    	ingredientsStr = ingredientsStr.replace("[", "");
+	    	    	ingredientsStr = ingredientsStr.replace("]", "");
+	    	    	String [] split = ingredientsStr.split("\\s*,\\s*");
+	    	    	String stepsStr = curPair.get("steps").getS();
+	    	    	stepsStr = stepsStr.replace(" , ", "-");
+	    	    	stepsStr = stepsStr.replace("', 'f'", "");
+	    	    	stepsStr = stepsStr.replace("', 'f ", "");
+	    	    	stepsStr = stepsStr.replace("'", "");
+	    	    	stepsStr = stepsStr.replace("[", "");
+	    	    	stepsStr = stepsStr.replace("]", "");
+	    	    	String [] stepsSplit = stepsStr.split("\\s*,\\s*");
+	    	    	List<String> ingredients = Arrays.asList(split);
+	    	    	List<String> steps = Arrays.asList(stepsSplit);
+	    	    	Recipe curRecipe = new Recipe(recipeName);
+	    	    	curRecipe.setLength(recipeLength);
+	    	    	for (int j = 0; j < ingredients.size(); j++) 
+	    	    	{
+	    	    		curRecipe.addIngredient(ingredients.get(j));
+	    	    	}
+	    	    	for (int k = 0; k < steps.size(); k++) 
+	    	    	{
+	    	    		curRecipe.addDirection(steps.get(k));
+	    	    	}
+	    	    	recipesFound.add(curRecipe);
+	    	    }
+	    	}
     	    PantryQuery(null);
-    	    return recipesFound;
+    	    Recipe[] retArray = new Recipe[recipesFound.size()];
+    	    retArray = recipesFound.toArray(retArray);
+    	    return retArray;
 
         } catch (AmazonServiceException ase) {
             System.out.println("Caught an AmazonServiceException, which means your request made it "
@@ -126,14 +119,11 @@ public class DB {
     // Finds recipes that match the user pantry of ingredients
     public List<Recipe> PantryQuery(List<String> pantry) throws Exception
     {
+    	if (pantry == null) {
+    		return new ArrayList<Recipe>();
+    	}
     	try 
     	{
-    		List<String> testPantry = new ArrayList<String>();
-    		testPantry.add("eggs");
-    		testPantry.add("flour");
-    		testPantry.add("milk");
-    		testPantry.add("chicken");
-    		
      	   ScanRequest scanRequest = new ScanRequest()
    	    	    .withTableName(sTableName);
      	    
@@ -145,19 +135,33 @@ public class DB {
    	    	Map<String, AttributeValue> curPair = items.get(i);
    	    	String recipeName = curPair.get("recipe").getS();
    	    	String ingredientsStr = curPair.get("ingredients").getS();
+   	    	String recipeLengthStr = curPair.get("minutes").getN();
+	    	int recipeLength = Integer.valueOf(recipeLengthStr);
 	    	ingredientsStr = ingredientsStr.replace("'", "");
 	    	ingredientsStr = ingredientsStr.replace("[", "");
 	    	ingredientsStr = ingredientsStr.replace("]", "");
 	    	String [] split = ingredientsStr.split("\\s*,\\s*");
+	    	String stepsStr = curPair.get("steps").getS();
+	    	stepsStr = stepsStr.replace(" , ", "-");
+	    	stepsStr = stepsStr.replace("', 'f'", "");
+	    	stepsStr = stepsStr.replace("', 'f ", "");
+	    	stepsStr = stepsStr.replace("'", "");
+	    	stepsStr = stepsStr.replace("[", "");
+	    	stepsStr = stepsStr.replace("]", "");
+	    	String [] stepsSplit = stepsStr.split("\\s*,\\s*");
+	    	List<String> steps = Arrays.asList(stepsSplit);
 	    	List<String> ingredients = Arrays.asList(split);
-   	    	Recipe curRecipe = new Recipe(recipeName.substring(2));
-   	    	
+   	    	Recipe curRecipe = new Recipe(recipeName);
+   	    	curRecipe.setLength(recipeLength);
    	    	for (int j = 0; j < ingredients.size(); j++) 
    	    	{
-   	    		
    	    		curRecipe.addIngredient(ingredients.get(j));
    	    	}
-   	    	if (testPantry.containsAll(curRecipe.getIngredients())) 
+   	    	for (int k = 0; k < steps.size(); k++) 
+	    	{
+	    		curRecipe.addDirection(steps.get(k));
+	    	}
+   	    	if (pantry.containsAll(curRecipe.getIngredients())) 
    	    	{
    	    		availableRecipes.add(curRecipe);
    	    	}
