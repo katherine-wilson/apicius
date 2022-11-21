@@ -172,11 +172,18 @@ public class Recipe implements Serializable, Comparable<Recipe> {
 	/**
 	 * Adds a step to the {@link #directions} of this recipe.
 	 * This will be added to the end of the directions list.
+	 * This function will capitalize the first letter and add
+	 * a period to the end of the direction as needed.
 	 * 
 	 * @param direction Instruction to add to this recipe.
 	 */
 	public void addDirection(String direction) {
-		this.directions.add(direction);
+		if (direction.charAt(direction.length()-1) != '!' &&	// if no punctuation... 
+				direction.charAt(direction.length()-1) != '.') {
+			direction += ".";		// add period at the end
+		}
+		this.directions.add(direction.substring(0, 1).toUpperCase() 
+				+ direction.substring(1));	// sentence form
 	}
 	
 	/**

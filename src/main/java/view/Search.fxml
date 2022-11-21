@@ -217,7 +217,7 @@
                         </HBox>
                         <StackPane maxHeight="870.0" maxWidth="1000.0" prefHeight="527.0" prefWidth="686.0" style="-fx-background-color: white;" VBox.vgrow="ALWAYS">
                            <children>
-                              <ScrollPane id="recipe-window" hbarPolicy="NEVER" maxHeight="2000.0" maxWidth="1000.0" pannable="true" prefHeight="527.0" prefWidth="686.0" style="-fx-background-color: transparent;" styleClass="recipe-window" vbarPolicy="ALWAYS">
+                              <ScrollPane id="recipe-window" fitToWidth="true" hbarPolicy="NEVER" maxHeight="2000.0" maxWidth="1.7976931348623157E308" pannable="true" prefHeight="527.0" prefWidth="686.0" style="-fx-background-color: transparent;" styleClass="recipe-window" vbarPolicy="ALWAYS">
                                  <content>
                                     <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="870.0" prefWidth="1000.0" style="-fx-background-radius: 20; -fx-background-color: white;">
                                        <children>
@@ -253,9 +253,9 @@
                                                 <Insets />
                                              </VBox.margin>
                                           </HBox>
-                                          <HBox VBox.vgrow="ALWAYS">
+                                          <HBox maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                                              <children>
-                                                <VBox fx:id="ingredientsBox" prefHeight="600.0" prefWidth="282.0">
+                                                <VBox fx:id="ingredientsBox" minWidth="282.0" prefHeight="600.0" prefWidth="282.0">
                                                    <children>
                                                       <Label alignment="CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="28.0" prefWidth="289.0" text="INGREDIENTS:" textAlignment="CENTER" textFill="#5b4f4f">
                                                          <font>
@@ -265,7 +265,7 @@
                                                    </children>
                                                 </VBox>
                                                 <Separator orientation="VERTICAL" prefHeight="600.0" prefWidth="89.0" />
-                                                <VBox fx:id="directionsBox">
+                                                <VBox fx:id="directionsBox" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                                                    <children>
                                                       <Label nodeOrientation="LEFT_TO_RIGHT" text="DIRECTIONS:" textFill="#5b4f4f">
                                                          <font>

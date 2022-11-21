@@ -1206,6 +1206,7 @@ public class GUI extends Application {
 				Label dirLabel = new Label(Integer.toString(i) + ". " + directions.get(i-1));
 				dirLabel.setFont(Font.font("Nirmala UI", 16));
 				dirLabel.setPadding(new Insets(0, 0, 0, 20));
+				dirLabel.setWrapText(true);
 				directionsBox.getChildren().add(dirLabel);
 			}
 			
@@ -1470,40 +1471,6 @@ public class GUI extends Application {
 	}
 	
 	/**
-	 * Creates a string with line breaks in it to create the
-	 * illusion of wrapped text.
-	 * 
-	 * @param str <code>String</code> to convert into wrapped text.
-	 * @param rowLen Maximum length of each "row" in the new <code>String</code>.
-	 * @return a wrapped-text version of the given <code>String</code>.
-	 */
-	private String wrapText(String str, int rowLen) {
-		if (str.length() > rowLen) {
-			String[] words = str.split(" ");
-			int curLen = 0;
-			String newStr = "";
-			for (String word : words) {	// iterates over each word, adds to new string
-				if (str.equals("Salt & Fresh Ground Pepper")) {
-					System.out.println(word);
-				}
-				if (curLen + word.length() + 1 > 20) {	// +1 for " "
-					curLen = 0;
-					newStr += "\n";	// adds newline when next word to add exceeds row length
-				}
-				newStr += word + " ";
-				curLen += word.length() + 1;
-			}
-			if (str.equals("Salt & Fresh Ground Pepper")) {
-				System.out.println(newStr);
-				System.out.println(newStr.strip());
-			}
-			return newStr.strip();
-		} else {
-			return str;
-		}
-	}
-	
-	/**
 	 * If the escape key is pressed while the {@link #recipeMenu} is open,
 	 * then the menu will be closed.
 	 * 
@@ -1729,5 +1696,32 @@ public class GUI extends Application {
 			return newString.substring(0, newString.length() - 1);
 		}
 		return str.toUpperCase();
+	}
+	
+	/**
+	 * Creates a string with line breaks in it to create the
+	 * illusion of wrapped text.
+	 * 
+	 * @param str <code>String</code> to convert into wrapped text.
+	 * @param rowLen Maximum length of each "row" in the new <code>String</code>.
+	 * @return a wrapped-text version of the given <code>String</code>.
+	 */
+	private String wrapText(String str, int rowLen) {
+		if (str.length() > rowLen) {
+			String[] words = str.split(" ");
+			int curLen = 0;
+			String newStr = "";
+			for (String word : words) {	// iterates over each word, adds to new string
+				if (curLen + word.length() + 1 > 20) {	// +1 for " "
+					curLen = 0;
+					newStr += "\n";	// adds newline when next word to add exceeds row length
+				}
+				newStr += word + " ";
+				curLen += word.length() + 1;
+			}
+			return newStr.strip();
+		} else {
+			return str;
+		}
 	}
 }
