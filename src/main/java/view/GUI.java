@@ -1575,7 +1575,7 @@ public class GUI extends Application {
 	private void slideUp(Node toSlide) {
 		toSlide.setTranslateY(1000);
 		TranslateTransition slide = new TranslateTransition();
-		slide.setDuration(Duration.millis(800));
+		slide.setDuration(Duration.millis(600));
 		slide.setNode(toSlide);
 		slide.setToY(0);
 		slide.setByY(0);
@@ -1586,6 +1586,7 @@ public class GUI extends Application {
 			{ bounce(toSlide, false); slideDown(searchToolbar, false); 
 			  slideLeft(searchInfo); });
 		} else if (currentMenu == 'f') {
+			slide.setDuration(Duration.millis(700));
 			menuTitle.setVisible(false);
 			slide.setOnFinished(e -> slideDown(menuTitle, true));
 		}
