@@ -270,7 +270,7 @@
                         <TableView fx:id="searchResults" minHeight="50.0" onMouseClicked="#openRecipeMenu" prefHeight="505.0" prefWidth="650.0" stylesheets="@tableview.css" VBox.vgrow="ALWAYS">
                            <columns>
                               <TableColumn fx:id="recipeNameCol" editable="false" prefWidth="30.0" text="Recipe" />
-                              <TableColumn id="numerical-column" fx:id="lengthCol" editable="false" prefWidth="71.0" text="Length" />
+                              <TableColumn id="numerical-column" fx:id="lengthCol" editable="false" prefWidth="71.0" text="Minutes" />
                               <TableColumn id="numerical-column" fx:id="stepsCol" editable="false" minWidth="0.0" prefWidth="85.0" text="Steps" />
                               <TableColumn id="numerical-column" fx:id="numIngredientsCol" editable="false" minWidth="0.0" prefWidth="146.0" text="# of Ingredients" />
                               <TableColumn fx:id="ingredientsCol" editable="false" prefWidth="128.0" text="Ingredients" />
