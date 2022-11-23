@@ -836,7 +836,7 @@ public class GUI extends Application {
 	 */
 	private void getSliderMaximums(int[] ranges) {
 		Recipe first = obsResults.get(0);
-		ranges[0] = 5;
+		ranges[0] = 4;
 		ranges[1] = first.getSteps();
 		ranges[2] = first.getNumIngredients();
 		
@@ -846,6 +846,15 @@ public class GUI extends Application {
 			}
 			if (r.getNumIngredients() > ranges[2]) {
 				ranges[2] = r.getNumIngredients();
+			}
+		}
+		
+		for (int i = 1; i < 3; i++) {
+			if (ranges[i] == 0) { ranges[i] = 1; }	// max must be 1 by default
+			if (ranges[i] < 5) {
+				ranges[i] = 5;
+			} else {
+				ranges[i] = ranges[i] + 5 - ranges[i]%5;
 			}
 		}
 	}
@@ -858,12 +867,7 @@ public class GUI extends Application {
 	 * @param max Maximum value of slider.
 	 */
 	private void formatSlider(RangeSlider slider, int max) {
-		if (max == 0) { max = 1; }	// max must be 1 by default
-		if (max < 5) {
-			max = 5;
-		} else {
-			slider.setMax(max + max%5-1);
-		}
+		slider.setMax(max);
 		slider.setMin(0);
 		slider.setMajorTickUnit(5);
 		slider.setMinorTickCount(4);
