@@ -10,6 +10,7 @@ import java.util.List;
 
 
 import controller.Controller;
+import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -334,6 +335,13 @@ public class GUI extends Application {
 	 */
 	@FXML
 	private Button recipeFavoriteButton;
+	/**
+	 * Recipe window containing more information about a recipe when
+	 * a user clicks on one. This node has a brown toolbar on top
+	 * and uses a <code>ScrollPane</code> to list the information. 
+	 */
+	@FXML
+	private VBox recipeWindow;
 	
 	// --------- Favorites Menu Fields ---------
 	/**
@@ -1302,6 +1310,21 @@ public class GUI extends Application {
 			}
 			
 			recipeMenu.setVisible(true);
+			
+			recipeWindow.setScaleX(.1);
+			recipeWindow.setScaleY(.1);
+			recipeWindow.setScaleZ(.1);
+			
+			ScaleTransition scale = new ScaleTransition(Duration.seconds(.19), recipeWindow);
+			scale.setToX(1.05);
+			scale.setToY(1.05);
+			scale.setOnFinished(e -> {
+				ScaleTransition scale2 = new ScaleTransition(Duration.seconds(.19), recipeWindow);
+				scale2.setToX(1/1.05);
+				scale2.setToY(1/1.05);
+				scale2.play();
+			});
+			scale.play();
 		}
 	}
 	
@@ -1511,6 +1534,7 @@ public class GUI extends Application {
 		}
 		if (obsResults.size() == 0) {	// no results found -- show message
 			searchResults.setVisible(false);
+			recipesFound.setText("");
 			noRecipesFound.setText("No Recipes Found...\nTime to go grocery shopping?");
 			noRecipesFound.setVisible(true);
 			filterButton.setVisible(false);

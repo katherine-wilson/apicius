@@ -292,7 +292,7 @@
             <AnchorPane fx:id="recipeMenu" prefHeight="595.0" prefWidth="710.0" style="-fx-background-color: #00000060;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Pane onMouseClicked="#closeRecipeMenu" prefHeight="595.0" prefWidth="710.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <VBox alignment="CENTER" layoutX="59.0" layoutY="58.0" style="-fx-background-radius: 20;" stylesheets="@recipe.css" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="59.0" AnchorPane.rightAnchor="58.0" AnchorPane.topAnchor="58.0">
+                  <VBox fx:id="recipeWindow" alignment="CENTER" layoutX="59.0" layoutY="58.0" style="-fx-background-radius: 20;" stylesheets="@recipe.css" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="59.0" AnchorPane.rightAnchor="58.0" AnchorPane.topAnchor="58.0">
                      <children>
                         <HBox maxHeight="40.0" maxWidth="1000.0" minHeight="40.0" minWidth="1.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="590.0" style="-fx-background-color: linear-gradient(to right, #684751, #884B53); -fx-background-radius: 20 20 0 0;" stylesheets="@recipe.css">
                            <children>
