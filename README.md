@@ -4,7 +4,7 @@ Apicius is a Java application designed to help users find and keep track of reci
 The purpose of this project is to simplify the task of finding new recipes to try. Although there are many apps available that provide similar services,
 most of them are locked behind subscription fees and other paywalls. This final state of this application would remain free and easy to use.
 <br><br>
-Apicius was built using MVC architecture and Java. JavaFX, ControlsFX, FXML, and CSS were used additionally to construct the UI. Our recipe data is stored in a DynamoDB table hosted through AWS. On the other hand, user data (ex. favorites list, virtual pantry) is stored locally.
+Apicius was built using MVC architecture and Java. JavaFX, ControlsFX, FXML, and CSS were used additionally to construct the UI. Our recipe data is stored in a DynamoDB table hosted through AWS. On the other hand, user data (ex. favorites list, virtual pantry) is stored locally. This was a school project for a Software Development class and is more of a concept piece than a finished product.
 
 #### Contents
 - [Setup](#how-to-run-apicius)
@@ -20,7 +20,13 @@ Apicius was built using MVC architecture and Java. JavaFX, ControlsFX, FXML, and
 
 # How to Run Apicius
 <ol>
-  <li></li>
+  <li>Download the folder from <a href="https://drive.google.com/drive/folders/1YRXt2l9ud0zLGQgg0KiO-dMuUn_wA2XY?usp=sharing">this link</a>.</li>
+  <li>Unzip it in a directory of your choice.</li>
+  <li>Run the "Apicius.jar" file. The most recent <a href="https://www.oracle.com/java/technologies/downloads/">JDK</a> must be installed on your machine in order for the application to run properly.</li>
+  <li>After a brief moment, the application should appear!</li>
+  <p align="center">
+  <img src="https://i.imgur.com/4um7Z8A.png" width=75% height=75%>
+  </p>
 </ol>
 <br><br>
 
