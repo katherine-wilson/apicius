@@ -44,49 +44,51 @@ Apicius has three main features: search, favorites, and pantry, which can each b
   <p align="center">
   <img src="https://i.imgur.com/V686z0N.png" width=50% height=50%>
   </p>
-  <br><br>
+  <br>
   Each recipe result can also be "opened" to view more detail by clicking on them.
+  <br><br>
   <p align="center">
   <img src="https://i.imgur.com/FJoHqrM.png" width=50% height=50%>
   </p>
-  <br><br>
-  
+  <br>
+
 ## Favorites
   <p align="center">
   <img src="https://i.imgur.com/DhDzS6S.png" width=75% height=75%>
   </p>
-  <br><br>
+  <br>
 The "Favorites" menu allows users to save recipes they're interested in for later. Recipes can be added to a user's favorites list by clicking the star button in the upper left corner when viewing a recipe, such as in the "Search" and "Pantry" menus. 
 <br><br>
   <p align="center">
   <img src="https://i.imgur.com/34R4gvd.png" width=50% height=50%>
   </p>
-  <br><br>
+  <br>
 When a user selects a recipe from their favorites, a row of buttons appears on top of the list. Here, the user can click the green arrows to move the recipe up and down in the list, the blue "Open" button to view the recipe in more detail (the recipe can also be double-clicked), and the red "Delete" button can be used to remove recipes from this list. 
 <br><br>
   <p align="center">
   <img src="https://i.imgur.com/K4HixyC.png" width=75% height=75%>
   </p>
-<br><br>
+<br>
 
 ## Pantry
 The "Pantry" menu allows users to select ingredients from a list that they already have in their household to receive recipe recommendations based on what they can already make. 
+<br><br>
   <p align="center">
   <img src="https://i.imgur.com/KG64143.png" width=75% height=75%>
   </p>
-  <br><br>
+  <br>
   Users can type in the search bar to add ingredients, which must match a suggestion from the drop-down list that appears. Ingredients can be added and removed from the virtual pantry at any time.  
   <br><br>
   <p align="center">
   <img src="https://i.imgur.com/dUX7J4q.png" width=35% height=35%>
   </p>
-  <br><br>
+  <br>
   After updating their virtual pantry to match their actual one, the user can then view a list of recipes that can be made using their pantry through the "See What You Can Make!" button at the button of the menu. A list of recipes will appear and like the "Search" menu, these results can be filtered and sorted as well.
   <br><br>
   <p align="center">
   <img src="https://i.imgur.com/N7ytmIN.png" width=75% height=75%>
   </p>
-  <br><br>
+  <br>
 
 # Limitations
 <br>
