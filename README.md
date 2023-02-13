@@ -2,7 +2,7 @@
 
 Apicius is a Java application designed to help users find and keep track of recipes through its three main features: search, favorites, and pantry. 
 The purpose of this project is to simplify the task of finding new recipes to try. Although there are many apps available that provide similar services,
-most of them are locked behind subscription fees and other paywalls. This final state of this application would remain free and easy to use.
+most of them are locked behind subscription fees and other paywalls. The final state of this application would remain free and easy to use.
 <br><br>
 Apicius was built using MVC architecture and Java. JavaFX, ControlsFX, FXML, and CSS were used additionally to construct the UI. Our recipe data is stored in a DynamoDB table hosted through AWS. On the other hand, user data (ex. favorites list, virtual pantry) is stored locally. This was a school project for a Software Development class and is more of a concept piece than a finished product.
 
@@ -36,7 +36,7 @@ Apicius has three main features: search, favorites, and pantry, which can each b
   <img src="https://i.imgur.com/0YCdLNN.png" width=75% height=75%>
   </p>
   <br>
-  The "Search" menu allows the user to search for recipes from the DynamoDB database using keywords. Search results can also be refined by clicking the "≡" button to the right of the search bar. Results can be filtered by number of minutes, steps, or ingredients it takes to complete a recipe. They can also be sorted by clicking on the table headers. The white triangle that appears will indicate what column the results are sorted by and whether it is in descending or ascending order.
+  The "Search" menu allows the user to search for recipes from the DynamoDB database using keywords. Search results can also be refined by clicking the "≡" button to the right of the search bar. Results can be filtered by the number of minutes, steps, or ingredients it takes to complete a recipe. They can also be sorted by clicking on the table headers. The white triangle that appears will indicate what column the results are sorted by and whether it is in descending or ascending order.
   <br><br>
   <p align="center">
   <img src="https://i.imgur.com/br12p5c.png" width=35% height=35%>
@@ -62,7 +62,7 @@ The "Favorites" menu allows users to save recipes they're interested in for late
   <img src="https://i.imgur.com/34R4gvd.png" width=50% height=50%>
   </p>
   <br><br>
-When a user selects a recipe from their favorites, a row of buttons appear on top of the list. Here, the user use the green arrows to move the recipe up and down in the list, the blue "Open" button to view the recipe in more detail (the recipe can also be double-clicked), and the red "Delete" button can be used to remove recipes from this list. 
+When a user selects a recipe from their favorites, a row of buttons appears on top of the list. Here, the user can click the green arrows to move the recipe up and down in the list, the blue "Open" button to view the recipe in more detail (the recipe can also be double-clicked), and the red "Delete" button can be used to remove recipes from this list. 
 <br><br>
   <p align="center">
   <img src="https://i.imgur.com/K4HixyC.png" width=75% height=75%>
@@ -92,12 +92,12 @@ The "Pantry" menu allows users to select ingredients from a list that they alrea
 <br>
 <ul>
   <li>This project was ultimately most limited by the recipe datasets available for free online since we did not have time to scrape our own. Although we chose the <a href=#references>most optimal one</a> for our academic purposes, it would not be ideal for an actual product. For example, the dataset is missing pictures, serving sizes, ingredient measurements, and most importantly, curation. The source of the dataset is <a href=https://Food.com>Food.com</a>, which is a site that allows anyone to post a recipe. As such, many of the recipes aren't very useful. This, along with the aforementioned lack of information, makes this application's practicality questionable. However, with much better data, this would be a much more promising product!</li><br>
-  <li>For the sake of demonstration and financial purposes, the dataset available to users is only a fraction of the size of the full one (180K+ recipes). Because the database is hosting by AWS, a database too big could incur high costs. As a result, the number of recipes in the application is limited to 50. Should this application be scaled to the full dataset, its code would have to be optimized to handle much larger amounts of data.</li>
+  <li>For the sake of demonstration and financial purposes, the dataset available to users is only a fraction of the size of the full one (180K+ recipes). Because the database is hosted by AWS, a database too big could incur high costs. As a result, the number of recipes in the application is limited to 50. Should this application be scaled to the full dataset, its code would have to be optimized to handle much larger amounts of data.</li>
 </ul>
 <br>
 
 # Future
-Unfortunately, due to time constraints (this was a roughly ~10 week project and each member of the development team was a full time student), there were many ideas pitched during the planning process that we were unable to add to the final project. If I were to pick up and continue this project, here's what I would add:
+Unfortunately, due to time constraints (this was a roughly ~10-week project and each member of the development team was a full-time student), there were many ideas pitched during the planning process that we were unable to add to the final project. If I were to pick up and continue this project, here's what I would add:
 <br><br>
 <ul>
   <li>User account system that allows users to sign-up and access their data from anywhere using DynamoDB</li>
