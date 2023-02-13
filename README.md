@@ -14,7 +14,6 @@ Apicius was built using MVC architecture and Java. JavaFX, ControlsFX, FXML, and
   - [Finding recipes to make with ingredients you already have](#pantry)
 - [Limitations](#limitations)
 - [Future](#future)
-- [Packages](#packages)
 - [References](#references)
 
 # How to Run Apicius
@@ -23,6 +22,7 @@ Apicius was built using MVC architecture and Java. JavaFX, ControlsFX, FXML, and
   <li>Unzip it in a directory of your choice.</li>
   <li>Run the "Apicius.jar" file. The most recent <a href="https://www.oracle.com/java/technologies/downloads/">JDK</a> must be installed on your machine in order for the application to run properly.</li>
   <li>After a brief moment, the application should appear!</li>
+  <br><br>
   <p align="center">
   <img src="https://i.imgur.com/4um7Z8A.png" width=75% height=75%>
   </p>
@@ -89,10 +89,28 @@ The "Pantry" menu allows users to select ingredients from a list that they alrea
   <br><br>
 
 # Limitations
-<br><br>
+<br>
+<ul>
+  <li>This project was ultimately most limited by the recipe datasets available for free online. Although we chose the <a href=#references>most optimal one</a> for our academic purposes, it would not be ideal for an actual product. For example, the dataset is missing pictures, serving sizes, ingredient measurements, and most importantly, curation. The source of the dataset is <a href=https://Food.com>Food.com</a>, which is a site that allows anyone to post a recipe. As such, many of the recipes aren't very useful. This, along with the aforementioned lack of information, makes this application's practicality questionable. However, with much better data, this would be a much more promising product!</li><br>
+  <li>For the sake of demonstration and financial purposes, the dataset available to users is only a fraction of the size of the full one. Because the database is hosting by AWS, a database too big could incur high costs. As a result, the number of recipes in the application is limited to 50. Should this application be scaled to the full dataset, its code would have to be optimized to handle much larger amounts of data.</li>
+</ul>
+<br>
+
 # Future
+Unfortunately, due to time constraints (this was a roughly ~10 week project and each member of the development team was a full time student), there were many ideas pitched during the planning process that we were unable to add to the final project. If I were to pick up and continue this project, here's what I would add:
 <br><br>
-# Packages
-<br><br>
+<ul>
+  <li>User account system that allows users to sign-up and access their data from anywhere using DynamoDB</li>
+  <li>Allow for multiple favorites lists to be created and maintained by the user</li>
+  <li>Allow users to create their own recipes and store them in their Favorites</li>
+  <li>The ability to "broaden" the pantry search by allowing users to specify a "missing-ingredient threshold" that returns a list of recipes they are missing only X ingredients for</li>
+  <li>Using recipe tags, create a recommendation menu based on recipes favorited by the user</li>
+</ul>
+<br>
+
 # References
-<br><br>
+* Images
+    * <a href="https://www.flaticon.com/free-icons/fork" title="fork icons">Fork icons created by Freepik - Flaticon</a>
+    * <a href="https://www.flaticon.com/free-icons/spoon" title="spoon icons">Spoon icons created by Roundicons - Flaticon</a>
+* Data
+    * Shuyang Li. (2019). <i>Food.com Recipes and Interactions</i> [Data set]. Kaggle. https://doi.org/10.34740/KAGGLE/DSV/783630
