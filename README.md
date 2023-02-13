@@ -92,7 +92,7 @@ The "Pantry" menu allows users to select ingredients from a list that they alrea
 <br>
 <ul>
   <li>This project was ultimately most limited by the recipe datasets available for free online. Although we chose the <a href=#references>most optimal one</a> for our academic purposes, it would not be ideal for an actual product. For example, the dataset is missing pictures, serving sizes, ingredient measurements, and most importantly, curation. The source of the dataset is <a href=https://Food.com>Food.com</a>, which is a site that allows anyone to post a recipe. As such, many of the recipes aren't very useful. This, along with the aforementioned lack of information, makes this application's practicality questionable. However, with much better data, this would be a much more promising product!</li><br>
-  <li>For the sake of demonstration and financial purposes, the dataset available to users is only a fraction of the size of the full one. Because the database is hosting by AWS, a database too big could incur high costs. As a result, the number of recipes in the application is limited to 50. Should this application be scaled to the full dataset, its code would have to be optimized to handle much larger amounts of data.</li>
+  <li>For the sake of demonstration and financial purposes, the dataset available to users is only a fraction of the size of the full one (180K+ recipes). Because the database is hosting by AWS, a database too big could incur high costs. As a result, the number of recipes in the application is limited to 50. Should this application be scaled to the full dataset, its code would have to be optimized to handle much larger amounts of data.</li>
 </ul>
 <br>
 
