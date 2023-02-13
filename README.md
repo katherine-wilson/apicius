@@ -105,6 +105,7 @@ Unfortunately, due to time constraints (this was a roughly ~10 week project and 
   <li>Allow users to create their own recipes and store them in their Favorites</li>
   <li>The ability to "broaden" the pantry search by allowing users to specify a "missing-ingredient threshold" that returns a list of recipes they are missing only X ingredients for</li>
   <li>Using recipe tags, create a recommendation menu based on recipes favorited by the user</li>
+  <li>Attempt to find a dataset or Recipe API with more comprehensive details per recipe</li>
 </ul>
 <br>
 
