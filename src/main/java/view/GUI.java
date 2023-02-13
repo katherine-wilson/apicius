@@ -1,8 +1,10 @@
 package view;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -544,7 +546,8 @@ public class GUI extends Application {
 	@Override
 	public void start(Stage stage) throws IOException {
 		// load home page FXML file by default
-		menu = FXMLLoader.load(getClass().getResource("Home.fxml"));
+		URL url = new File("src/main/java/view/Home.fxml").toURI().toURL();
+		menu = FXMLLoader.load(url);
 		currentMenu = 'h';
 		
 		// initialize static fields - shared by every GUI instance created by FXML
@@ -557,7 +560,7 @@ public class GUI extends Application {
 			GUI.recipeSubset = new ArrayList<Recipe>();
 			ObjectInputStream input;
 			try {	// reads in subset from file
-				input = new ObjectInputStream(new FileInputStream(RECIPE_SUBSET_FILE));
+				input = new ObjectInputStream(new FileInputStream("src/data/" + RECIPE_SUBSET_FILE));
 				ArrayList<Recipe> subset = (ArrayList<Recipe>) input.readObject();
 				if (subset != null) {
 					GUI.recipeSubset = (ArrayList<Recipe>) subset.clone();

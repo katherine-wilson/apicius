@@ -84,7 +84,7 @@ public class Model implements Serializable {
 	 */
 	public Model() {
 		db = new DB();
-		File userData = new File(DATA_FILE_NAME); 
+		File userData = new File("src/data/" + DATA_FILE_NAME); 
 		if (userData.exists()) {
 			initializeUserData();
 		}
@@ -113,7 +113,7 @@ public class Model implements Serializable {
 	private void initializeUserData() {
 		ObjectInputStream input;
 		try {
-			input = new ObjectInputStream(new FileInputStream(DATA_FILE_NAME));
+			input = new ObjectInputStream(new FileInputStream("src/data/" + DATA_FILE_NAME));
 			Model model = (Model) input.readObject();	// reads in model object from file
 			if (model != null) {
 				if (model.favorites != null) {
@@ -135,7 +135,7 @@ public class Model implements Serializable {
 	private void initializeIngredients() {
 		Scanner scanner;
 		try {
-			scanner = new Scanner(new File(INGREDIENTS_FILE_NAME));
+			scanner = new Scanner(new File("src/data/" + INGREDIENTS_FILE_NAME));
 			while (scanner.hasNextLine()) {
 				allIngredients.add(titleCase(scanner.nextLine().strip()));
 			}
@@ -155,7 +155,7 @@ public class Model implements Serializable {
 	 */
 	public void saveUserData() {
 		try {
-			ObjectOutputStream output =  new ObjectOutputStream(new FileOutputStream(DATA_FILE_NAME));
+			ObjectOutputStream output =  new ObjectOutputStream(new FileOutputStream("src/data/" + DATA_FILE_NAME));
 			output.writeObject(this);
 			output.close();
 		} catch (IOException e) {

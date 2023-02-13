@@ -25,15 +25,16 @@ public class DB {
     
     public DB() 
     {
-    	BasicAWSCredentials awsCreds = new BasicAWSCredentials("AKIA27QC4C7OKQMFHHCH", 
-    			"kc0NPpvx+qu9iTS9rZF1darGGMeaU6oaKy86BbcM");
+    	// read-only access key (using IAM roles)
+    	BasicAWSCredentials awsCreds = new BasicAWSCredentials("AKIATVCUNOXLIKBJAYMO", 
+    			"2zZtl09wIqfBb2kh+YpuALM92o6JvQwuenrXrFVE");
 
     	dynamoDB = AmazonDynamoDBClientBuilder.standard()
             .withRegion(Regions.US_WEST_2)
             .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
             .build();
     	
-        sTableName = "436Project";
+        sTableName = "Recipes";
     }
 
     private static void init() throws Exception {
@@ -58,7 +59,7 @@ public class DB {
     	    for (int i = 0; i < items.size(); i++) 
     	    {
     	    	Map<String, AttributeValue> curPair = items.get(i);
-    	    	String recipeName = curPair.get("recipe").getS();
+    	    	String recipeName = curPair.get("name").getS();
     	    	String lowerName = recipeName.toLowerCase().replace(" ", "");
     	    	if (lowerName.contains(sSearchStr)) 
     	    	{
@@ -133,7 +134,7 @@ public class DB {
      	   for (int i = 0; i < items.size(); i++) 
      	   {
    	    	Map<String, AttributeValue> curPair = items.get(i);
-   	    	String recipeName = curPair.get("recipe").getS();
+   	    	String recipeName = curPair.get("name").getS();
    	    	String ingredientsStr = curPair.get("ingredients").getS();
    	    	String recipeLengthStr = curPair.get("minutes").getN();
 	    	int recipeLength = Integer.valueOf(recipeLengthStr);
@@ -168,8 +169,8 @@ public class DB {
    	    }
      	  for (int i = 0; i < availableRecipes.size(); i++) 
      	  {
-				System.out.print("---------------\n" + availableRecipes.get(i) +
-						" - ingredients: " + availableRecipes.get(i).getIngredientString() + "\n---------------\n");
+				//System.out.print("---------------\n" + availableRecipes.get(i) +
+				//		" - ingredients: " + availableRecipes.get(i).getIngredientString() + "\n---------------\n");
      	  }
      	  return availableRecipes;
 
