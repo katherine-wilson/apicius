@@ -26,8 +26,8 @@ public class DB {
     public DB() 
     {
     	// read-only access key (using IAM roles)
-    	BasicAWSCredentials awsCreds = new BasicAWSCredentials("AKIATVCUNOXLIKBJAYMO", 
-    			"2zZtl09wIqfBb2kh+YpuALM92o6JvQwuenrXrFVE");
+    	BasicAWSCredentials awsCreds = new BasicAWSCredentials("ID", 
+    			"key");
 
     	dynamoDB = AmazonDynamoDBClientBuilder.standard()
             .withRegion(Regions.US_WEST_2)
